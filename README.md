@@ -1,9 +1,22 @@
 # Sophia Code Community
-> **The Governance Layer for the AI Age.**
 
-![Thalamus Enterprise Standard](https://img.shields.io/badge/Thalamus-Enterprise%20Standard-0A0E27?style=flat-square&labelColor=00D9FF&color=0A0E27)
-![Status](https://img.shields.io/badge/Status-MVP-success?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)
+<div align="center">
+  <img src="assets/sophia-master.png" alt="Sophia - The Governance Layer" width="180" />
+  
+  <h3>The Governance Layer for the AI Age</h3>
+
+  <p>
+    <a href="https://github.com/TheMethodArq/sophia-community/blob/main/LICENSE">
+      <img src="https://img.shields.io/badge/License-MIT-blue?style=flat-square" alt="MIT License" />
+    </a>
+    <a href="#">
+      <img src="https://img.shields.io/badge/Thalamus-Enterprise%20Standard-0A0E27?style=flat-square&labelColor=00D9FF&color=0A0E27" alt="Thalamus Enterprise Standard" />
+    </a>
+    <a href="#">
+      <img src="https://img.shields.io/badge/Status-MVP-success?style=flat-square" alt="Status: MVP" />
+    </a>
+  </p>
+</div>
 
 ---
 
