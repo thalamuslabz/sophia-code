@@ -14,9 +14,29 @@ Cognexa changes this by treating **thinking as a first-class artifact**. It enfo
 
 Cognexa intentionally separates governance from execution. This separation is the core of its architecture and the primary defense against the runaway scope and untraceable changes common in AI tooling.
 
-<div align="center">
-    <img src="../assets/cognexa-architecture.png" alt="Cognexa Architecture Diagram" width="800" />
-</div>
+```mermaid
+graph TB
+    subgraph COGNEXA ["Layer 1: Cognexa (The System)"]
+        C1[Artifact lifecycle]
+        C2[Intents • Gates • Contracts]
+        C3[Transition rules]
+    end
+    
+    subgraph SOPHIA ["Layer 2: Sophia (Governance & Authority)"]
+        S1[Enforces gates]
+        S2[Verifies intent]
+        S3[Escalates to humans]
+    end
+    
+    subgraph EXECUTION ["Layer 3: Execution Engines"]
+        E1[UI / CLI / Agents]
+        E2[Runs after approval]
+        E3[Produces outputs]
+    end
+    
+    COGNEXA -->|governs| SOPHIA
+    SOPHIA -->|authorizes| EXECUTION
+```
 
 ### Layer 1: Cognexa (The System)
 

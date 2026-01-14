@@ -1,15 +1,8 @@
 <div align="center">
-  <img src="assets/cognexa-banner.png" alt="Cognexa Community" width="100%" />
-</div>
 
-<br />
+# Cognexa Community
 
-<div align="center">
-
-**Cognexa Community** is the open commons for cognitive governance—<br />
-a shared system of judgment for AI-assisted work.
-
-<br />
+**A shared system of judgment for AI-assisted work.**
 
 [![MIT License](https://img.shields.io/badge/License-MIT-00D9FF.svg?style=flat-square)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6.svg?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
@@ -17,11 +10,7 @@ a shared system of judgment for AI-assisted work.
 
 </div>
 
-<br />
-
 ---
-
-<br />
 
 ## This is not a prompt library.
 
@@ -42,23 +31,37 @@ Most failures in AI-assisted work don't come from bad tools—they come from:
 
 **Cognexa Community exists to solve that problem by making thinking reusable.**
 
-<br />
-
 ---
 
-<br />
+## The Core Idea: Authority Separated from Labor
 
-## The Core Idea
-
-<br />
-
-<div align="center">
-  <img src="assets/cognexa-architecture.png" alt="Authority separated from labor" width="85%" />
-</div>
-
-<br />
-
-Cognexa separates **authority** from **labor**.
+```mermaid
+graph TB
+    subgraph COGNEXA ["Cognexa (System of Thought)"]
+        C1[Artifact lifecycle]
+        C2[Intents • Gates • Contracts]
+        C3[Transition rules]
+    end
+    
+    subgraph SOPHIA ["Sophia (Governance Authority)"]
+        S1[Enforces gates]
+        S2[Verifies intent]
+        S3[Escalates to humans]
+    end
+    
+    subgraph EXECUTION ["Execution Engines (The Labor)"]
+        E1[UI / CLI / Agents]
+        E2[Runs after approval]
+        E3[Produces outputs]
+    end
+    
+    COGNEXA -->|governs| SOPHIA
+    SOPHIA -->|authorizes| EXECUTION
+    
+    style COGNEXA fill:#0A0E27,stroke:#00D9FF,stroke-width:2px,color:#fff
+    style SOPHIA fill:#0A0E27,stroke:#00D9FF,stroke-width:2px,color:#fff
+    style EXECUTION fill:#0A0E27,stroke:#00D9FF,stroke-width:2px,color:#fff
+```
 
 | Layer | Role | What it does |
 |:------|:-----|:-------------|
@@ -69,11 +72,7 @@ Cognexa separates **authority** from **labor**.
 > Nothing in this repo executes work.  
 > Everything in this repo governs *whether work should happen at all*.
 
-<br />
-
 ---
-
-<br />
 
 ## Meet Sophia
 
@@ -91,11 +90,33 @@ When confidence drops or risk rises, Sophia escalates. She never acts beyond her
 
 <br clear="left" />
 
-<br />
-
 ---
 
-<br />
+## Artifact Lifecycle
+
+```mermaid
+graph LR
+    I[Intent] -->|approved| G[Gate]
+    G -->|passed| C[Contract]
+    C -->|signed| X[Execution]
+    X -->|completed| V[Verification]
+    
+    I -.->|"What & Why"| I
+    G -.->|"May we proceed?"| G
+    C -.->|"Terms of work"| C
+    X -.->|"The work happens"| X
+    V -.->|"Did it match?"| V
+    
+    style I fill:#0A0E27,stroke:#00D9FF,stroke-width:2px,color:#fff
+    style G fill:#0A0E27,stroke:#00D9FF,stroke-width:2px,color:#fff
+    style C fill:#0A0E27,stroke:#00D9FF,stroke-width:2px,color:#fff
+    style X fill:#0A0E27,stroke:#00D9FF,stroke-width:2px,color:#fff
+    style V fill:#0A0E27,stroke:#00D9FF,stroke-width:2px,color:#fff
+```
+
+Each transition requires explicit approval. No skipping steps.
+
+---
 
 ## What Lives Here
 
@@ -124,11 +145,35 @@ Hard-earned lessons from real projects. What to enforce, what to avoid, and why.
 </tr>
 </table>
 
-<br />
-
 ---
 
-<br />
+## The Problem We Solve
+
+```mermaid
+graph LR
+    subgraph BEFORE ["Unverifiable Work"]
+        B1[Intent implicit]
+        B2[Decisions undocumented]
+        B3[Assumptions hidden]
+        B4[No audit trail]
+    end
+    
+    subgraph AFTER ["Governed Execution"]
+        A1[Intent = artifact]
+        A2[Decision points explicit]
+        A3[Constraints enforceable]
+        A4[Full traceability]
+    end
+    
+    BEFORE -->|Cognexa| AFTER
+    
+    style BEFORE fill:#1a1a2e,stroke:#ff6b6b,stroke-width:2px,color:#fff
+    style AFTER fill:#0A0E27,stroke:#00D9FF,stroke-width:2px,color:#fff
+```
+
+When work becomes "prompt-shaped," the failure modes are subtle until they're catastrophic.
+
+---
 
 ## Who This Is For
 
@@ -148,36 +193,7 @@ If you've ever said:
 
 You're in the right place.
 
-<br />
-
 ---
-
-<br />
-
-## The Problem We Solve
-
-<br />
-
-<div align="center">
-  <img src="assets/problem-solution.png" alt="From chaos to governed execution" width="85%" />
-</div>
-
-<br />
-
-When work becomes "prompt-shaped," the failure modes are subtle until they're catastrophic.
-
-| Unverifiable Work | Governed Execution |
-|:------------------|:-------------------|
-| Intent stays implicit | Intent becomes an artifact |
-| Decisions undocumented | Decision points are explicit |
-| Assumptions hidden | Constraints are enforceable |
-| No audit trail | Outcomes are defensible |
-
-<br />
-
----
-
-<br />
 
 ## Design Principles
 
@@ -189,11 +205,7 @@ When work becomes "prompt-shaped," the failure modes are subtle until they're ca
 | **Human Authority** | AI proposes, humans decide |
 | **OSS Credibility** | Transparent, auditable, community-owned |
 
-<br />
-
 ---
-
-<br />
 
 ## Quick Start
 
@@ -215,11 +227,42 @@ npm run dev
 
 Open **http://localhost:5173** to see the reference implementation.
 
-<br />
-
 ---
 
-<br />
+## How the Community Fits
+
+```mermaid
+graph TB
+    subgraph COMMUNITY ["Cognexa Community (Open Commons)"]
+        CC1[Reusable artifacts]
+        CC2[Templates + standards]
+        CC3[Public review]
+    end
+    
+    subgraph LOCAL ["Sophia (Local / Enterprise)"]
+        L1[Enforces locally]
+        L2[Adds org policy]
+        L3[Audits + adapts]
+    end
+    
+    subgraph IMPL ["Implementations"]
+        I1[Teams]
+        I2[Agents]
+        I3[CI/CD]
+    end
+    
+    COMMUNITY -->|shared starting points| LOCAL
+    LOCAL -->|governs| IMPL
+    
+    style COMMUNITY fill:#0A0E27,stroke:#00D9FF,stroke-width:2px,color:#fff
+    style LOCAL fill:#0A0E27,stroke:#00D9FF,stroke-width:2px,color:#fff
+    style IMPL fill:#0A0E27,stroke:#00D9FF,stroke-width:2px,color:#fff
+```
+
+The community provides shared starting points.  
+Sophia enforces them locally or in enterprise environments.
+
+---
 
 ## Documentation
 
@@ -230,11 +273,7 @@ Open **http://localhost:5173** to see the reference implementation.
 | **[Security Policy](SECURITY.md)** | Zero Trust through governance |
 | **[Contributing](CONTRIBUTING.md)** | How to contribute (correctness over speed) |
 
-<br />
-
 ---
-
-<br />
 
 ## Contribution Model
 
@@ -245,11 +284,7 @@ We don't accept drive-by PRs. Contributions must include:
 - **Maintainer review** — governance applies to the repo itself
 - **No anonymous publishing** — accountability is non-negotiable
 
-<br />
-
 ---
-
-<br />
 
 ## One Sentence Summary
 
@@ -260,11 +295,7 @@ We don't accept drive-by PRs. Contributions must include:
 
 </div>
 
-<br />
-
 ---
-
-<br />
 
 ## Who We Are
 
@@ -275,17 +306,11 @@ We build systems that sit above execution—systems concerned with reasoning, ju
 We are not here to replace humans with AI.  
 We are here to make sure AI operates within human intent.
 
-<br />
-
 ---
-
-<br />
 
 <div align="center">
 
 Made with ❤️ by **Thalamus**
-
-<br />
 
 *This is how professionals think when the stakes are real.*
 
