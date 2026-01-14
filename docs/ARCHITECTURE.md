@@ -15,7 +15,7 @@ Cognexa changes this by treating **thinking as a first-class artifact**. It enfo
 Cognexa intentionally separates governance from execution. This separation is the core of its architecture and the primary defense against the runaway scope and untraceable changes common in AI tooling.
 
 <div align="center">
-    <img src="../assets/problem-solution.png" alt="Cognexa Architecture Diagram" width="800"/>
+    <img src="../assets/cognexa-architecture.png" alt="Cognexa Architecture Diagram" width="800" />
 </div>
 
 ### Layer 1: Cognexa (The System)
