@@ -215,8 +215,8 @@ This repo includes a reference UI to visualize governance artifacts and demonstr
 
 ```bash
 # Clone
-git clone https://github.com/TheMethodArq/sophia-community.git
-cd sophia-community
+git clone https://github.com/TheMethodArq/sophia.code.git
+cd sophia.code
 
 # Install (clean install preserves version integrity)
 npm ci

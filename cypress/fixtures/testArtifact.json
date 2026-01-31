@@ -1,0 +1,12 @@
+{
+  "title": "Test Artifact",
+  "description": "This is a test artifact created by Cypress for E2E testing",
+  "type": "intent",
+  "trustScore": 85,
+  "author": {
+    "name": "Cypress Test",
+    "avatar": "",
+    "verified": true
+  },
+  "tags": ["test", "e2e", "cypress"]
+}

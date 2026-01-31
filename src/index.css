@@ -1,11 +1,61 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Manrope:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --background: 222 47% 4%; /* #030712 */
+    --foreground: 210 40% 98%; /* #f8fafc */
+    
+    --card: 220 40% 6%; /* #090e1a */
+    --card-foreground: 210 40% 98%;
+ 
+    --popover: 222 47% 4%;
+    --popover-foreground: 210 40% 98%;
+ 
+    --primary: 280 85% 60%; /* #BD34FE Purple */
+    --primary-foreground: 210 40% 98%;
+ 
+    --secondary: 190 100% 50%; /* #00F0FF Cyan */
+    --secondary-foreground: 222 47% 11%;
+ 
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+ 
+    --accent: 280 85% 60%;
+    --accent-foreground: 210 40% 98%;
+ 
+    --destructive: 345 80% 55%; /* Pink/Red for errors instead of standard red */
+    --destructive-foreground: 210 40% 98%;
+ 
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+    --ring: 280 85% 60%;
+
+    --magenta: 300 100% 50%; /* #FF00FF Electric Magenta */
+  }
+
   body {
-    @apply bg-background text-white font-sans antialiased;
+    @apply bg-background text-foreground font-sans antialiased selection:bg-secondary/20 selection:text-secondary;
+    background-image: 
+      radial-gradient(circle at 50% 0%, rgba(189, 52, 254, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 0% 100%, rgba(0, 240, 255, 0.1) 0%, transparent 50%);
+    background-attachment: fixed;
+  }
+}
+
+@layer utilities {
+  .glass-panel {
+    @apply bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)];
+  }
+  
+  .text-glow {
+    text-shadow: 0 0 10px rgba(189, 52, 254, 0.5);
+  }
+
+  .text-glow-cyan {
+    text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
   }
 }
