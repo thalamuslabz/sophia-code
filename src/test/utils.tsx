@@ -1,14 +1,44 @@
 import React, { ReactElement } from 'react';
 import { render, RenderOptions } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
+import missionReducer from '../store/slices/mission.slice';
+import governanceReducer from '../store/slices/governance.slice';
+import contextReducer from '../store/slices/context.slice';
+import uiReducer from '../store/slices/ui.slice';
 import { Artifact } from '../types';
 
-// Create a wrapper for testing components that use the router
+// Create a test store
+const createTestStore = () => configureStore({
+  reducer: {
+    mission: missionReducer,
+    governance: governanceReducer,
+    context: contextReducer,
+    ui: uiReducer,
+  },
+  // Customize initial state if needed
+  preloadedState: {
+    // Example: preloaded state
+    context: {
+      missionId: 'test-mission',
+      vendor: 'opencode',
+      metrics: { latency: 0, cost: 0 }
+    }
+  }
+});
+
+// Create a wrapper for testing components that use the router and Redux
 const AllTheProviders = ({ children }: { children: React.ReactNode }) => {
+  // Create a fresh store for each test to avoid state leakage
+  const store = createTestStore();
+
   return (
-    <BrowserRouter>
-      {children}
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        {children}
+      </BrowserRouter>
+    </Provider>
   );
 };
 

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { artifactApi, ApiClient } from './index';
+import { artifactApi, ApiClient, ArtifactApi } from './index';
 import { mockFetch } from '../../test/setup';
 import { createMockArtifact } from '../../test/utils';
 
@@ -8,26 +8,40 @@ describe('ApiClient', () => {
     vi.clearAllMocks();
   });
 
-  it('should use the correct base URL and API key', () => {
-    // Create a spy for fetch
-    const fetchSpy = vi.spyOn(global, 'fetch');
+  it('should use the correct base URL and API key', async () => {
+    // Setup mock response
+    mockFetch(200, []);
 
-    // Make a request
-    artifactApi.getAllArtifacts();
+    // Create a new client with known values
+    const customApiClient = new ApiClient('http://test-api-base.com', 'test-api-key-123');
 
-    // Check the fetch call
-    expect(fetchSpy).toHaveBeenCalledWith(
-      'http://localhost:3000/api/artifacts',
-      expect.objectContaining({
-        headers: expect.objectContaining({
-          'X-API-Key': 'test-api-key',
-          'Content-Type': 'application/json',
-        }),
-      })
+    // Spy on the customApiClient's getHeaders method
+    const getHeadersSpy = vi.spyOn(customApiClient as any, 'getHeaders');
+
+    // Make a simple request
+    await customApiClient.get('/test-endpoint');
+
+    // Check the headers contain what we expect
+    expect(getHeadersSpy).toHaveBeenCalled();
+    expect(getHeadersSpy.mock.results[0].value).toEqual({
+      'Content-Type': 'application/json',
+      'X-API-Key': 'test-api-key-123'
+    });
+
+    // Also verify the URL was constructed correctly
+    expect(global.fetch).toHaveBeenCalledWith(
+      'http://test-api-base.com/test-endpoint',
+      expect.anything()
     );
+  });
   });
 
   describe('getAllArtifacts', () => {
+    beforeEach(() => {
+      // Clear all mocks before each test
+      vi.clearAllMocks();
+    });
+
     it('should fetch all artifacts and map them correctly', async () => {
       // Mock the backend response
       const backendArtifacts = [
@@ -59,6 +73,8 @@ describe('ApiClient', () => {
         },
       ];
 
+      // Reset and set up mock response
+      vi.resetAllMocks();
       mockFetch(200, backendArtifacts);
 
       // Call the method
@@ -81,7 +97,8 @@ describe('ApiClient', () => {
     });
 
     it('should handle API errors', async () => {
-      // Mock a failed response
+      // Reset and mock a failed response
+      vi.resetAllMocks();
       mockFetch(500, { message: 'Internal server error' });
 
       // The API call should throw
@@ -242,4 +259,3 @@ describe('ApiClient', () => {
       await expect(artifactApi.deleteArtifact('non-existent')).rejects.toThrow();
     });
   });
-});

@@ -36,14 +36,18 @@ interface LoggerOptions {
  */
 class Logger {
   private options: LoggerOptions;
-  private logStore: Array<{ level: LogLevel; message: string; data?: any; timestamp: Date }> = [];
+  private logStore: Array<{ level: LogLevel; message: string; data?: any; timestamp: Date }>;
 
-  constructor(options: Partial<LoggerOptions> = {}) {
+  constructor(
+    options: Partial<LoggerOptions> = {},
+    logStore?: Array<{ level: LogLevel; message: string; data?: any; timestamp: Date }>
+  ) {
     this.options = {
       enableConsole: options.enableConsole ?? enableConsoleLogging,
       minLevel: options.minLevel ?? currentLogLevel,
       prefix: options.prefix,
     };
+    this.logStore = logStore ?? [];
   }
 
   /**
@@ -85,7 +89,7 @@ class Logger {
    * Clear logs
    */
   clearLogs() {
-    this.logStore = [];
+    this.logStore.length = 0; // Clear the array without reassigning it
   }
 
   /**
@@ -160,6 +164,7 @@ class Logger {
 
   /**
    * Create a child logger with a prefix
+   * Shares the same log store as the parent
    */
   createChild(prefix: string): Logger {
     return new Logger({
@@ -167,7 +172,7 @@ class Logger {
       prefix: this.options.prefix
         ? `${this.options.prefix}:${prefix}`
         : prefix,
-    });
+    }, this.logStore); // Pass the same log store reference
   }
 }
 

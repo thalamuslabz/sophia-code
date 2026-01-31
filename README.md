@@ -266,12 +266,25 @@ Sophia enforces them locally or in enterprise environments.
 
 ## Documentation
 
+### Technical Documentation
+
 | Document | Description |
 |:---------|:------------|
 | **[Architecture](docs/ARCHITECTURE.md)** | The three-layer system: Cognexa, Sophia, and Execution |
 | **[Meet Sophia](docs/MEET_SOPHIA.md)** | Persona, mission, and how she governs |
 | **[Security Policy](SECURITY.md)** | Zero Trust through governance |
 | **[Contributing](CONTRIBUTING.md)** | How to contribute (correctness over speed) |
+
+### User Documentation
+
+| Document | Description |
+|:---------|:------------|
+| **[Installation Guide](docs/user/INSTALL.md)** | Step-by-step installation instructions |
+| **[Setup Guide](docs/user/SETUP_GUIDE.md)** | Configuration and API setup guide |
+| **[User Guide](docs/user/USER_GUIDE.md)** | Complete guide to using Sophia Code |
+| **[VSCode Integration](docs/user/VSCODE_INTEGRATION.md)** | Using Sophia with VSCode |
+| **[Troubleshooting](docs/user/TROUBLESHOOTING.md)** | Solutions to common issues |
+| **[Admin Guide](docs/user/ADMIN_GUIDE.md)** | Guide for system administrators |
 
 ---
 

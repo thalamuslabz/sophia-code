@@ -1,9 +1,13 @@
 import { z } from 'zod';
 
 const envSchema = z.object({
-  VITE_AI_PROVIDER: z.enum(['opencode', 'anthropic', 'openai', 'gemini']).default('opencode'),
+  VITE_AI_PROVIDER: z.enum(['opencode', 'anthropic', 'deepseek', 'kimi', 'openai', 'gemini']).default('opencode'),
   VITE_OPENCODE_API_KEY: z.string().optional(),
   VITE_ANTHROPIC_API_KEY: z.string().optional(),
+  VITE_DEEPSEEK_API_KEY: z.string().optional(),
+  VITE_DEEPSEEK_API_ENDPOINT: z.string().url().optional(),
+  VITE_KIMI_API_KEY: z.string().optional(),
+  VITE_KIMI_API_ENDPOINT: z.string().url().optional(),
   VITE_OPENAI_API_KEY: z.string().optional(),
   VITE_API_BASE_URL: z.string().url().optional(),
   VITE_API_KEY: z.string().optional(), // API key for backend authentication

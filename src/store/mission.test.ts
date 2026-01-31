@@ -1,72 +1,90 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { useMissionStore } from './mission';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { configureStore } from '@reduxjs/toolkit';
+import missionReducer from './slices/mission.slice';
+import governanceReducer, { triggerGate, resolveGate } from './slices/governance.slice';
 import { GovernanceEngine } from '../lib/governance/engine';
 
+// Create a test store for these tests
+const createTestStore = () => configureStore({
+  reducer: {
+    mission: missionReducer,
+    governance: governanceReducer
+  }
+});
+
 describe('Cortex & Governance System', () => {
+  let store: any;
+
   beforeEach(() => {
-    useMissionStore.getState().resetMission();
+    store = createTestStore();
   });
 
   describe('Mission Store', () => {
     it('should initialize with idle status', () => {
-      const state = useMissionStore.getState();
-      expect(state.status).toBe('idle');
-      expect(state.trustScore).toBe(100);
+      const state = store.getState();
+      expect(state.mission.status).toBe('idle');
+      expect(state.mission.trustScore).toBe(100);
     });
 
     it('should transition to gated when triggerGate is called', () => {
-      useMissionStore.getState().triggerGate({
+      store.dispatch(triggerGate({
         id: 'test-gate',
         type: 'security',
         message: 'Security Alert',
         severity: 'high'
-      });
-      
-      const state = useMissionStore.getState();
-      expect(state.status).toBe('gated');
-      expect(state.activeGates).toHaveLength(1);
+      }));
+
+      const state = store.getState();
+      expect(state.mission.status).toBe('gated');
+      expect(state.governance.activeGates).toHaveLength(1);
     });
 
     it('should resume execution when gate is approved', () => {
       // First trigger
-      useMissionStore.getState().triggerGate({
+      store.dispatch(triggerGate({
         id: 'test-gate',
         type: 'security',
         message: 'Security Alert',
         severity: 'high'
-      });
-      
+      }));
+
       // Then resolve
-      useMissionStore.getState().resolveGate('test-gate', true);
-      
-      const state = useMissionStore.getState();
-      expect(state.status).toBe('executing');
-      expect(state.activeGates[0].status).toBe('approved');
+      store.dispatch(resolveGate('test-gate', true));
+
+      const state = store.getState();
+      expect(state.mission.status).toBe('executing');
+      expect(state.governance.activeGates[0].status).toBe('approved');
     });
   });
 
   describe('Governance Engine', () => {
     it('should detect PII in stream', () => {
-      GovernanceEngine.analyzeStream('Contact user at test@example.com immediately.');
-      
-      const state = useMissionStore.getState();
-      expect(state.activeGates).toHaveLength(1);
-      expect(state.activeGates[0].type).toBe('pii');
+      GovernanceEngine.analyzeStream('Contact user at test@example.com immediately.', store.dispatch);
+
+      const state = store.getState();
+      expect(state.governance.activeGates).toHaveLength(1);
+      expect(state.governance.activeGates[0].type).toBe('pii');
     });
 
     it('should detect destructive commands', () => {
-      GovernanceEngine.analyzeStream('Executing: rm -rf / root directory');
-      
-      const state = useMissionStore.getState();
-      expect(state.activeGates).toHaveLength(1);
-      expect(state.activeGates[0].message).toContain('Destructive');
+      // Reset the store first
+      store = createTestStore();
+
+      GovernanceEngine.analyzeStream('Executing: rm -rf / root directory', store.dispatch);
+
+      const state = store.getState();
+      expect(state.governance.activeGates).toHaveLength(1);
+      expect(state.governance.activeGates[0].message).toContain('Destructive');
     });
 
     it('should ignore safe text', () => {
-      GovernanceEngine.analyzeStream('Hello world, this is a safe string.');
-      
-      const state = useMissionStore.getState();
-      expect(state.activeGates).toHaveLength(0);
+      // Reset the store first
+      store = createTestStore();
+
+      GovernanceEngine.analyzeStream('Hello world, this is a safe string.', store.dispatch);
+
+      const state = store.getState();
+      expect(state.governance.activeGates).toHaveLength(0);
     });
   });
 });

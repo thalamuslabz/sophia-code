@@ -4,4 +4,4 @@ export interface AIProvider {
   streamText(prompt: string): AsyncGenerator<string>;
 }
 
-export type AIProviderType = 'opencode' | 'anthropic' | 'openai' | 'gemini';
+export type AIProviderType = 'opencode' | 'anthropic' | 'deepseek' | 'kimi' | 'openai' | 'gemini';
