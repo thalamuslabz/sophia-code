@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '../../test/utils';
 import { ArtifactForm } from './ArtifactForm';
 import { createMockArtifact } from '../../test/utils';
@@ -34,6 +34,7 @@ describe('ArtifactForm', () => {
       description: 'Test description',
       author: {
         name: 'Test Author',
+        avatar: '',
         verified: true,
       },
       tags: ['test', 'edit'],

@@ -1,4 +1,4 @@
-import { AppDispatch } from '../../store';
+import type { AppDispatch } from '../../store';
 import { triggerGate } from '../../store/slices/governance.slice';
 
 // Simple regex-based patterns for MVP

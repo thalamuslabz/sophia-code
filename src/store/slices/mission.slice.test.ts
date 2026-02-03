@@ -5,16 +5,15 @@ import {
   addLog,
   setTrustScore,
   adjustTrustScore,
-  resetMission,
-  MissionStatus,
-  LogEntry
+  resetMission
 } from './mission.slice';
+import type { MissionStatus, LogEntry } from './mission.slice';
 
 describe('Mission Slice', () => {
   const initialState = {
     status: 'idle' as MissionStatus,
     trustScore: 100,
-    logs: []
+    logs: [] as LogEntry[]
   };
 
   it('should handle initial state', () => {
@@ -84,11 +83,11 @@ describe('Mission Slice', () => {
 
   it('should handle resetMission', () => {
     // Setup a state with logs, different status and trust score
-    let state = {
-      status: 'completed' as MissionStatus,
+    let state: { status: MissionStatus; trustScore: number; logs: LogEntry[] } = {
+      status: 'completed',
       trustScore: 75,
       logs: [
-        { id: '1', timestamp: 123, text: 'Test', type: 'info' as const }
+        { id: '1', timestamp: 123, text: 'Test', type: 'info' }
       ]
     };
 

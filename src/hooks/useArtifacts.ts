@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { artifactApi } from '../lib/api';
-import { Artifact } from '../types';
+import type { Artifact } from '../types';
 
 /**
  * Custom hook for managing artifacts from the API

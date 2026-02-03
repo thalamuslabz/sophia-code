@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import { MissionLayout } from './components/layout/MissionLayout';
 import { ArtifactExplorer } from './components/features/ArtifactExplorer';
 import { motion, AnimatePresence } from 'framer-motion';

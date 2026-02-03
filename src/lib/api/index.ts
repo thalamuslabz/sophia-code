@@ -1,4 +1,4 @@
-import { Artifact } from '../../types';
+import type { Artifact } from '../../types';
 import { ApiClient } from './client';
 import { ApiError } from './errors';
 import { apiLogger as logger } from '../utils/logger';
@@ -136,7 +136,7 @@ export class ArtifactApi {
    * Map backend artifact model to frontend model
    */
   private mapToFrontendModel(backendArtifact: any): Artifact {
-    const { id, name, description, type, status, metadata, hash, content, createdBy } = backendArtifact;
+    const { id, name, description, type, metadata, hash, createdBy } = backendArtifact;
 
     // Extract trustScore from metadata or set a default
     const trustScore = metadata?.trustScore || 85;

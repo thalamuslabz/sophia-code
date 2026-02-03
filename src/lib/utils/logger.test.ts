@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { logger, LogLevel } from './logger';
+import { logger, LogLevel, type LogLevelValue } from './logger';
 
 // Mock import.meta.env
 vi.stubGlobal('import.meta', {
@@ -30,7 +30,7 @@ describe('Logger', () => {
     console.error = vi.fn();
 
     // Override the logToConsole method to bypass the isTest check
-    logger['logToConsole'] = function(level: LogLevel, message: string, data?: any) {
+    logger['logToConsole'] = function(level: LogLevelValue, message: string, data?: unknown) {
       const timestamp = new Date().toISOString();
       const prefix = `[${timestamp}] [${level.toUpperCase()}]`;
 

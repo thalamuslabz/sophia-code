@@ -1,7 +1,8 @@
-import { defineConfig } from 'vite'
+/// <reference types="vitest/config" />
+import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 
-// https://vite.dev/config/
+// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
   test: {
@@ -11,5 +12,11 @@ export default defineConfig({
     coverage: {
       reporter: ['text', 'json', 'html'],
     },
+    // Exclude backend Jest tests - they use different test framework
+    exclude: [
+      '**/backend/**/*',
+      '**/node_modules/**/*',
+      '**/dist/**/*',
+    ],
   },
 })

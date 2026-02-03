@@ -1,10 +1,9 @@
 import { motion } from 'framer-motion';
-import { useState, useEffect } from 'react';
-import { Database, Link, Power, RefreshCw, Server, MessageSquare, Bot, Terminal, Braces, Settings, PenTool, Sparkles } from 'lucide-react';
+import { useState } from 'react';
+import { Database, Link, Power, Server, MessageSquare, Bot, Terminal, Braces, Sparkles } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { setVendor, selectVendor } from '../../store/slices/context.slice';
 import type { AIProviderType } from '../../lib/ai/types';
-import { env } from '../../config/env';
 
 // Configuration dialog component
 const ConfigureProviderDialog = ({

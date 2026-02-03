@@ -2,13 +2,15 @@
  * Logger utility for consistent logging across the application
  */
 
-// Define log levels
-export enum LogLevel {
-  DEBUG = 'debug',
-  INFO = 'info',
-  WARN = 'warn',
-  ERROR = 'error',
-}
+// Define log levels as const object
+export const LogLevel = {
+  DEBUG: 'debug' as const,
+  INFO: 'info' as const,
+  WARN: 'warn' as const,
+  ERROR: 'error' as const,
+};
+
+export type LogLevelValue = typeof LogLevel[keyof typeof LogLevel];
 
 // Environment
 const isProduction = import.meta.env.PROD;
@@ -25,9 +27,17 @@ const currentLogLevel = isProduction
 // Should we log to console?
 const enableConsoleLogging = !isProduction || isDevelopment;
 
+// Log level priority mapping
+const levelPriority = {
+  [LogLevel.DEBUG]: 0,
+  [LogLevel.INFO]: 1,
+  [LogLevel.WARN]: 2,
+  [LogLevel.ERROR]: 3,
+};
+
 interface LoggerOptions {
   enableConsole: boolean;
-  minLevel: LogLevel;
+  minLevel: LogLevelValue;
   prefix?: string;
 }
 
@@ -36,11 +46,11 @@ interface LoggerOptions {
  */
 class Logger {
   private options: LoggerOptions;
-  private logStore: Array<{ level: LogLevel; message: string; data?: any; timestamp: Date }>;
+  private logStore: Array<{ level: LogLevelValue; message: string; data?: any; timestamp: Date }>;
 
   constructor(
     options: Partial<LoggerOptions> = {},
-    logStore?: Array<{ level: LogLevel; message: string; data?: any; timestamp: Date }>
+    logStore?: Array<{ level: LogLevelValue; message: string; data?: any; timestamp: Date }>
   ) {
     this.options = {
       enableConsole: options.enableConsole ?? enableConsoleLogging,
@@ -95,7 +105,7 @@ class Logger {
   /**
    * Generic log method
    */
-  private log(level: LogLevel, message: string, data?: any): void {
+  private log(level: LogLevelValue, message: string, data?: any): void {
     // Skip logging if level is below minimum
     if (!this.shouldLog(level)) {
       return;
@@ -128,21 +138,14 @@ class Logger {
   /**
    * Check if we should log at this level
    */
-  private shouldLog(level: LogLevel): boolean {
-    const levelPriority = {
-      [LogLevel.DEBUG]: 0,
-      [LogLevel.INFO]: 1,
-      [LogLevel.WARN]: 2,
-      [LogLevel.ERROR]: 3,
-    };
-
+  private shouldLog(level: LogLevelValue): boolean {
     return levelPriority[level] >= levelPriority[this.options.minLevel];
   }
 
   /**
    * Log to console with appropriate styling
    */
-  private logToConsole(level: LogLevel, message: string, data?: any): void {
+  private logToConsole(level: LogLevelValue, message: string, data?: any): void {
     const timestamp = new Date().toISOString();
     const prefix = `[${timestamp}] [${level.toUpperCase()}]`;
 

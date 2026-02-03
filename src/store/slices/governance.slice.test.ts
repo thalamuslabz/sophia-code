@@ -6,7 +6,7 @@ import {
   clearGates,
   triggerGate,
   resolveGate,
-  GovernanceGate
+  type GovernanceGate
 } from './governance.slice';
 import { setStatus, addLog, adjustTrustScore } from './mission.slice';
 

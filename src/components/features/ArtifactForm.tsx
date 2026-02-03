@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, AlertCircle } from 'lucide-react';
-import { Artifact } from '../../types';
+import type { Artifact } from '../../types';
 import { GlassCard } from '../ui/GlassCard';
 
 // Type for our form values

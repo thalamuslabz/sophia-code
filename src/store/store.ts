@@ -1,6 +1,4 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { useDispatch, useSelector } from 'react-redux';
-import type { TypedUseSelectorHook } from 'react-redux';
 
 // Import slices as they're implemented
 import missionReducer from './slices/mission.slice';

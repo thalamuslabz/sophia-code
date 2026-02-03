@@ -13,7 +13,7 @@ const createTestStore = () => configureStore({
 });
 
 describe('Cortex & Governance System', () => {
-  let store: any;
+  let store: ReturnType<typeof createTestStore>;
 
   beforeEach(() => {
     store = createTestStore();

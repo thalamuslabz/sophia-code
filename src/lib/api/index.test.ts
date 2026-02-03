@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { artifactApi, ApiClient, ArtifactApi } from './index';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { artifactApi, ApiClient } from './index';
 import { mockFetch } from '../../test/setup';
 import { createMockArtifact } from '../../test/utils';
 

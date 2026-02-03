@@ -1,16 +1,13 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, X } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { useArtifacts } from '../hooks/useArtifacts';
 import { ArtifactExplorer } from '../components/features/ArtifactExplorerV2';
 import { ArtifactForm } from '../components/features/ArtifactForm';
-import { Artifact } from '../types';
+import type { Artifact } from '../types';
 
 export const ArtifactsPage = () => {
   const {
-    artifacts,
-    loading,
-    error,
     createArtifact,
     updateArtifact
   } = useArtifacts();
@@ -36,12 +33,6 @@ export const ArtifactsPage = () => {
   // Handler to open form for creating a new artifact
   const handleCreateNew = () => {
     setEditingArtifact(undefined);
-    setShowForm(true);
-  };
-
-  // Handler to open form for editing an artifact
-  const handleEdit = (artifact: Artifact) => {
-    setEditingArtifact(artifact);
     setShowForm(true);
   };
 

@@ -1,8 +1,8 @@
 import { useState, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Shield, Code, FileCode, ArrowRight, X, Tag, FileText, Zap, AlertTriangle, Loader2 } from 'lucide-react';
+import { Search, Shield, X, Tag, FileText, Loader2 } from 'lucide-react';
 import { useArtifacts } from '../../hooks/useArtifacts';
-import { Artifact } from '../../types';
+import type { Artifact } from '../../types';
 import { GlassCard } from '../ui/GlassCard';
 
 export const ArtifactExplorer = ({ onClose }: { onClose: () => void }) => {
@@ -15,8 +15,6 @@ export const ArtifactExplorer = ({ onClose }: { onClose: () => void }) => {
     error,
     selectedArtifact,
     setSelectedArtifact,
-    createArtifact,
-    updateArtifact,
     deleteArtifact
   } = useArtifacts();
 

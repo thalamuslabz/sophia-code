@@ -1,5 +1,7 @@
-import React, { ReactElement } from 'react';
-import { render, RenderOptions } from '@testing-library/react';
+import React from 'react';
+import type { ReactElement } from 'react';
+import { render } from '@testing-library/react';
+import type { RenderOptions } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
@@ -7,7 +9,7 @@ import missionReducer from '../store/slices/mission.slice';
 import governanceReducer from '../store/slices/governance.slice';
 import contextReducer from '../store/slices/context.slice';
 import uiReducer from '../store/slices/ui.slice';
-import { Artifact } from '../types';
+import type { Artifact } from '../types';
 
 // Create a test store
 const createTestStore = () => configureStore({
@@ -55,7 +57,7 @@ export * from '@testing-library/react';
 export { customRender as render };
 
 // Mock data helpers
-export const createMockArtifact = (overrides = {}): Artifact => ({
+export const createMockArtifact = (overrides: Partial<Artifact> = {}): Artifact => ({
   id: 'test-id-123',
   type: 'intent',
   title: 'Test Artifact',

@@ -1,5 +1,5 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '../../test/utils';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { render, screen, fireEvent } from '../../test/utils';
 import { ArtifactExplorer } from './ArtifactExplorerV2';
 import { useArtifacts } from '../../hooks/useArtifacts';
 import { createMockArtifacts, createMockArtifact } from '../../test/utils';
