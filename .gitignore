@@ -43,3 +43,16 @@ sophia-community-requirements.md
 Icon
 Icon?
 Icon\r
+docs/planning/
+
+# Backend
+/backend/.env.local
+/backend/dist/
+/backend/coverage/
+
+# Local production overrides
+*.production.local
+
+# Deployment
+.sentryclirc
+.vercel

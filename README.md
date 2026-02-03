@@ -1,21 +1,23 @@
 <div align="center">
 
-# Cognexa Community
+# Sophia Code
 
-**A shared system of judgment for AI-assisted work.**
+**A reference implementation for AI-assisted software engineering with governance.**
 
+[![v0.0.2](https://img.shields.io/badge/version-v0.0.2-00D9FF.svg?style=flat-square)](./CHANGELOG.md)
 [![MIT License](https://img.shields.io/badge/License-MIT-00D9FF.svg?style=flat-square)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6.svg?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-18.x-61DAFB.svg?style=flat-square&logo=react&logoColor=black)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-5.x-646CFF.svg?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev/)
 
 </div>
 
 ---
 
-## This is not a prompt library.
+## This is not just a prompt library.
 
-This is not an agent marketplace.  
-This is not about speed.
+This is a complete governance system.  
+This is not about speed—it's about correctness.
 
 **This is about judgment.**
 
@@ -29,7 +31,7 @@ Most failures in AI-assisted work don't come from bad tools—they come from:
 - Skipped decision points
 - Work starting before thinking is complete
 
-**Cognexa Community exists to solve that problem by making thinking reusable.**
+**Sophia Code exists to solve that problem by making thinking reusable.**
 
 ---
 
@@ -69,8 +71,8 @@ graph TB
 | **Sophia** | Governance Authority | Enforces gates, verifies intent, escalates to humans |
 | **Execution** | The Labor | UI, CLI, agents—runs *only after* governance approves |
 
-> Nothing in this repo executes work.  
-> Everything in this repo governs *whether work should happen at all*.
+> Work happens only after governance approves.  
+> Intent must be explicit before any execution begins.
 
 ---
 
@@ -120,26 +122,24 @@ Each transition requires explicit approval. No skipping steps.
 
 ## What Lives Here
 
-Cognexa Community is a **library of governance artifacts**, not code.
+Sophia Code is a **reference implementation** with governance at its core. It includes both the governance framework and production-ready code.
 
 <table>
 <tr>
 <td width="50%" valign="top">
 
-### Intents
-Reusable templates for framing work correctly *before* execution begins.
-
-### Gates
-Explicit decision checkpoints that must be passed before work proceeds.
+### Governance
+- **Intents** — Reusable templates for framing work correctly
+- **Gates** — Explicit decision checkpoints before work proceeds
+- **Contracts** — Structured expectations for SDLC artifacts
 
 </td>
 <td width="50%" valign="top">
 
-### Contracts
-Structured expectations for SDLC artifacts—PRDs, TRDs, security add-ons.
-
-### Standards & Anti-Patterns
-Hard-earned lessons from real projects. What to enforce, what to avoid, and why.
+### Implementation
+- **React + TypeScript UI** — Reference visualization interface
+- **Vite Build System** — Fast, optimized development workflow
+- **Modular Architecture** — Clean separation of concerns
 
 </td>
 </tr>
@@ -177,7 +177,7 @@ When work becomes "prompt-shaped," the failure modes are subtle until they're ca
 
 ## Who This Is For
 
-Cognexa Community is built for people who are already accountable for outcomes:
+Sophia Code is built for people who are already accountable for outcomes:
 
 - Senior engineers and architects  
 - Platform and infrastructure leaders  
@@ -209,34 +209,107 @@ You're in the right place.
 
 ## Quick Start
 
-This repo includes a reference UI to visualize governance artifacts and demonstrate Sophia's gates.
+Get Sophia Code running locally in under 5 minutes.
 
-**Prerequisites:** Node.js 18+
+### Prerequisites
+
+- Node.js 18+ (20+ recommended)
+- npm 9+ or yarn 1.22+
+- Git 2.30+
+
+### Install & Run
 
 ```bash
-# Clone
+# Clone the repository
 git clone https://github.com/TheMethodArq/sophia.code.git
 cd sophia.code
 
-# Install (clean install preserves version integrity)
+# Install dependencies (clean install for reproducibility)
 npm ci
 
-# Run
+# Start the development server
 npm run dev
 ```
 
-Open **http://localhost:5173** to see the reference implementation.
+Open **[http://localhost:5173](http://localhost:5173)** to see the reference implementation.
+
+### Available Scripts
+
+| Command | Description |
+|:--------|:------------|
+| `npm run dev` | Start development server (Vite) |
+| `npm run build` | Create production build |
+| `npm run preview` | Preview production build locally |
+| `npm run lint` | Run ESLint with auto-fix |
+| `npm run format` | Run Prettier formatter |
+| `npm run test` | Run test suite |
+| `npm run typecheck` | Run TypeScript type checker |
+
+### Project Structure
+
+```
+sophia.code/
+├── src/                  # Core application
+│   ├── components/       # React UI components
+│   ├── hooks/           # Custom React hooks
+│   ├── stores/          # State management
+│   ├── types/           # TypeScript definitions
+│   └── utils/           # Utility functions
+├── public/              # Static assets
+├── docs/                # Documentation
+│   ├── ARCHITECTURE.md  # System architecture
+│   ├── MEET_SOPHIA.md   # Governance persona
+│   └── user/            # User guides
+└── dist/                # Build output (generated)
+```
 
 ---
 
-## How the Community Fits
+## Deployment
+
+Sophia Code is designed for flexible deployment scenarios.
+
+### Vite Preview (Local Production Test)
+
+```bash
+# Build for production
+npm run build
+
+# Preview locally
+npm run preview
+```
+
+### Static Hosting
+
+The build output in `dist/` is a static site ready for any hosting platform:
+
+- **Vercel**: Zero-config deployment with `vercel --prod`
+- **Netlify**: Drag-and-drop `dist/` folder or use CLI
+- **GitHub Pages**: Serve `dist/` directory
+- **AWS S3 + CloudFront**: Upload `dist/` contents to S3 bucket
+
+See [PRODUCTION_READINESS.md](docs/PRODUCTION_READINESS.md) for complete deployment checklist including security headers, environment configuration, and monitoring.
+
+### Environment Configuration
+
+Create `.env.local` for local overrides (never commit):
+
+```bash
+VITE_API_URL=http://localhost:3000
+VITE_ENABLE_ANALYTICS=false
+VITE_DEBUG_MODE=true
+```
+
+---
+
+## How the Project Fits
 
 ```mermaid
 graph TB
-    subgraph COMMUNITY ["Cognexa Community (Open Commons)"]
-        CC1[Reusable artifacts]
-        CC2[Templates + standards]
-        CC3[Public review]
+    subgraph CODE ["Sophia Code (Reference)"]
+        CC1[Reference implementation]
+        CC2[Governance + code]
+        CC3[Documentation]
     end
     
     subgraph LOCAL ["Sophia (Local / Enterprise)"]
@@ -251,16 +324,16 @@ graph TB
         I3[CI/CD]
     end
     
-    COMMUNITY -->|shared starting points| LOCAL
+    CODE -->|reference implementation| LOCAL
     LOCAL -->|governs| IMPL
     
-    style COMMUNITY fill:#0A0E27,stroke:#00D9FF,stroke-width:2px,color:#fff
+    style CODE fill:#0A0E27,stroke:#00D9FF,stroke-width:2px,color:#fff
     style LOCAL fill:#0A0E27,stroke:#00D9FF,stroke-width:2px,color:#fff
     style IMPL fill:#0A0E27,stroke:#00D9FF,stroke-width:2px,color:#fff
 ```
 
-The community provides shared starting points.  
-Sophia enforces them locally or in enterprise environments.
+This repository provides the reference implementation.  
+Sophia enforces gates locally or in enterprise environments.
 
 ---
 
@@ -272,6 +345,7 @@ Sophia enforces them locally or in enterprise environments.
 |:---------|:------------|
 | **[Architecture](docs/ARCHITECTURE.md)** | The three-layer system: Cognexa, Sophia, and Execution |
 | **[Meet Sophia](docs/MEET_SOPHIA.md)** | Persona, mission, and how she governs |
+| **[Production Readiness](docs/PRODUCTION_READINESS.md)** | Deployment checklist and production setup |
 | **[Security Policy](SECURITY.md)** | Zero Trust through governance |
 | **[Contributing](CONTRIBUTING.md)** | How to contribute (correctness over speed) |
 
@@ -303,7 +377,7 @@ We don't accept drive-by PRs. Contributions must include:
 
 <div align="center">
 
-**Cognexa Community turns individual judgment into shared, enforceable practice—**  
+**Sophia Code provides a reference implementation that turns individual judgment into shared, enforceable practice—**  
 **so AI-assisted work stays intentional, auditable, and human-led.**
 
 </div>
@@ -312,7 +386,7 @@ We don't accept drive-by PRs. Contributions must include:
 
 ## Who We Are
 
-Cognexa Community is stewarded by **Thalamus**.
+Sophia Code is stewarded by **Thalamus**.
 
 We build systems that sit above execution—systems concerned with reasoning, judgment, governance, and accountability.
 
