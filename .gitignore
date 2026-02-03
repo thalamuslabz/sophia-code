@@ -56,3 +56,6 @@ docs/planning/
 # Deployment
 .sentryclirc
 .vercel
+
+# Knowledge Base (Open WebUI documentation - internal use only)
+/knowledge/
