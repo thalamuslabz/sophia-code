@@ -1,61 +1,34 @@
-# Node.js & npm
-node_modules
-dist
-.npm
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
-report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
-*.tgz
+# Dependencies
+node_modules/
 
-# Vite
-.vite/
-.parcel-cache
-*.local
-
-# TypeScript
+# Build output
+dist/
 *.tsbuildinfo
 
-# Environment Variables
+# Environment
 .env
 .env.*
 !.env.example
 
-# Editor Directories
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
 .vscode/
 .idea/
 
-# OS-specific
-.DS_Store
-*.AppleDouble
-._*
-Thumbs.db
+# Testing
+coverage/
 
-# Test & Coverage
-coverage
-.nyc_output
-*.lcov
+# Sophia runtime (ephemeral - do not commit)
+.sophia/sophia.db
+.sophia/sessions/
+.sophia/health/
+.sophia/generated/
 
-# Project Specific
-sophia-community-requirements.md
-Icon
-Icon?
-Icon\r
-docs/planning/
+# Next.js
+.next/
 
-# Backend
-/backend/.env.local
-/backend/dist/
-/backend/coverage/
-
-# Local production overrides
-*.production.local
-
-# Deployment
-.sentryclirc
-.vercel
-
-# Knowledge Base (Open WebUI documentation - internal use only)
+# Project-specific
 /knowledge/
