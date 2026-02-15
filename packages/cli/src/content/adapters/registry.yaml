@@ -1,0 +1,59 @@
+adapters:
+  claude-code:
+    enabled: true
+    format: "markdown"
+    target_files:
+      - path: "CLAUDE.md"
+        scope: "project"
+        strategy: "inject_block"
+    global_files:
+      - path: "~/.claude/CLAUDE.md"
+        strategy: "read_only"
+    injection:
+      marker_start: "<!-- SOPHIA:BEGIN - Auto-managed by sophia.code -->"
+      marker_end: "<!-- SOPHIA:END -->"
+      position: "end"
+    template: "claude-code.hbs"
+
+  opencode:
+    enabled: true
+    format: "markdown"
+    target_files:
+      - path: "AGENTS.md"
+        scope: "project"
+        strategy: "inject_block"
+    injection:
+      marker_start: "<!-- SOPHIA:BEGIN - Auto-managed by sophia.code -->"
+      marker_end: "<!-- SOPHIA:END -->"
+      position: "end"
+    template: "opencode.hbs"
+
+  cursor:
+    enabled: true
+    format: "markdown"
+    target_files:
+      - path: ".cursorrules"
+        scope: "project"
+        strategy: "inject_block"
+    injection:
+      marker_start: "<!-- SOPHIA:BEGIN - Auto-managed by sophia.code -->"
+      marker_end: "<!-- SOPHIA:END -->"
+      position: "end"
+    template: "cursor.hbs"
+
+  copilot:
+    enabled: false
+    format: "markdown"
+    target_files:
+      - path: ".github/copilot-instructions.md"
+        scope: "project"
+        strategy: "inject_block"
+    injection:
+      marker_start: "<!-- SOPHIA:BEGIN - Auto-managed by sophia.code -->"
+      marker_end: "<!-- SOPHIA:END -->"
+      position: "end"
+    template: "copilot.hbs"
+
+ignore:
+  - ".claude/settings.local.json"
+  - ".cursor/settings.json"

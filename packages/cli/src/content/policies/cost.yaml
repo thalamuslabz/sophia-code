@@ -1,0 +1,44 @@
+policy:
+  id: "cost"
+  name: "Cost Management Policy"
+  version: "1.0.0"
+  description: "Manages token and dependency costs in AI-assisted development"
+
+rules:
+  - id: "COST-001"
+    name: "Large dependency warning"
+    severity: "yellow"
+    description: "New dependencies over 500KB should be justified"
+    detection:
+      type: "action"
+      trigger: "dependency_add"
+      check: "package_size_threshold"
+      threshold_kb: 500
+    teaching:
+      beginner: |
+        Large dependencies increase bundle size and load time.
+        Consider if you need the entire library or just a small part.
+        Look for lighter alternatives when possible.
+      intermediate: "Large dependency. Consider lighter alternative."
+      advanced: "COST-001: Large dep. Justify."
+      topic: "dependency-management"
+    fix_suggestion: "Evaluate if a lighter alternative exists"
+    auto_fixable: false
+
+  - id: "COST-002"
+    name: "Duplicate dependency detection"
+    severity: "yellow"
+    description: "Avoid adding dependencies that duplicate existing functionality"
+    detection:
+      type: "action"
+      trigger: "dependency_add"
+      check: "similar_existing_dependency"
+    teaching:
+      beginner: |
+        Adding a library that does the same thing as an existing one
+        increases bundle size and maintenance burden.
+        Check existing dependencies before adding new ones.
+      intermediate: "Possible duplicate dependency. Check existing deps."
+      advanced: "COST-002: Duplicate dep check."
+    fix_suggestion: "Check if existing dependencies already provide this functionality"
+    auto_fixable: false

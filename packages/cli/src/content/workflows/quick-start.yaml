@@ -1,0 +1,14 @@
+workflow:
+  name: "Quick Start"
+  description: "Fast prototyping workflow with minimal governance"
+  version: "1.0.0"
+
+steps:
+  - name: "Implement"
+    agent: "coding"
+    description: "Write code with basic governance"
+    outputs: ["implementation"]
+
+  - name: "Quick Check"
+    description: "Run sophia policy check on changed files"
+    outputs: ["policy_results"]

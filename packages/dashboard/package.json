@@ -1,0 +1,24 @@
+{
+  "name": "@sophia-code/dashboard",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "next dev -p 9473",
+    "build": "next build",
+    "start": "next start -p 9473"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.6.0",
+    "next": "^15.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "yaml": "^2.5.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.11",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "typescript": "~5.6.0"
+  }
+}

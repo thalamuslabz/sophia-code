@@ -1,0 +1,45 @@
+policy:
+  id: "testing"
+  name: "Testing Policy"
+  version: "1.0.0"
+  description: "Ensures adequate test coverage in AI-assisted development"
+
+rules:
+  - id: "TEST-001"
+    name: "New endpoints need tests"
+    severity: "yellow"
+    description: "API endpoints should have corresponding test files"
+    detection:
+      type: "heuristic"
+      trigger: "new_api_endpoint"
+      check: "corresponding_test_exists"
+    teaching:
+      beginner: |
+        Every API endpoint should have tests that verify its behavior.
+        Tests catch bugs before they reach users and make refactoring safe.
+      intermediate: "New endpoint without tests. Add test coverage."
+      advanced: "TEST-001: Add endpoint tests."
+      topic: "test-driven-development"
+    fix_suggestion: "Create a test file that covers the new endpoint"
+    auto_fixable: false
+
+  - id: "TEST-002"
+    name: "No skipped tests committed"
+    severity: "yellow"
+    description: "Skipped tests should not be committed"
+    detection:
+      type: "git-hook"
+      patterns:
+        - "\\.skip\\s*\\("
+        - "xit\\s*\\("
+        - "xdescribe\\s*\\("
+        - "@pytest\\.mark\\.skip"
+      file_types: ["*.test.*", "*.spec.*", "*_test.*"]
+    teaching:
+      beginner: |
+        Skipped tests indicate incomplete work. Either fix the test or remove it.
+        Leaving skipped tests creates a false sense of coverage.
+      intermediate: "Skipped test in commit. Fix or remove."
+      advanced: "TEST-002: Skipped test. Fix."
+    fix_suggestion: "Fix the skipped test or remove it"
+    auto_fixable: false

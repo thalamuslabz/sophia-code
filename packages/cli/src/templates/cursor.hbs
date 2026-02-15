@@ -1,0 +1,31 @@
+## Sophia Governance
+> Auto-managed by sophia.code v{{version}} | {{timestamp}}
+
+### Rules
+{{#each policies}}
+{{#each this.rules}}
+{{#if (eq this.severity "red")}}
+- NEVER: {{this.name}} — {{this.description}}
+{{/if}}
+{{/each}}
+{{/each}}
+{{#each policies}}
+{{#each this.rules}}
+{{#if (eq this.severity "yellow")}}
+- CAUTION: {{this.name}} — {{this.description}}
+{{/if}}
+{{/each}}
+{{/each}}
+
+### Session Awareness
+Before modifying files, check `.sophia/sessions/bulletin.yaml` for recent changes by other sessions.
+When starting work, write your intent to `.sophia/sessions/current-intent.md`.
+When done, delete `.sophia/sessions/current-intent.md`.
+
+{{#if patterns}}
+### Patterns
+Follow patterns in `.sophia/patterns/` for:
+{{#each patterns}}
+- {{this.name}} ({{this.file}})
+{{/each}}
+{{/if}}

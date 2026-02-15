@@ -1,0 +1,22 @@
+## Sophia Governance (v{{version}})
+
+### Security Rules
+{{#each policies}}
+{{#if (eq this.id "security")}}
+{{#each this.rules}}
+- {{this.description}}
+{{/each}}
+{{/if}}
+{{/each}}
+
+### Code Quality
+{{#each policies}}
+{{#if (eq this.id "quality")}}
+{{#each this.rules}}
+- {{this.description}}
+{{/each}}
+{{/if}}
+{{/each}}
+
+### Project Patterns
+Refer to .sophia/patterns/ for established patterns in this project.

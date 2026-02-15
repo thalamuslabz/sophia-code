@@ -1,0 +1,73 @@
+## Sophia Governance
+> Auto-managed by sophia.code v{{version}} | Last sync: {{timestamp}}
+> Source of truth: .sophia/config.yaml | Do not edit this section manually.
+
+### Project Context
+- Tech Stack: {{config.project.tech_stack.language}}{{#if config.project.tech_stack.framework}}, {{config.project.tech_stack.framework}}{{/if}}{{#if config.project.tech_stack.orm}}, {{config.project.tech_stack.orm}}{{/if}}
+- Test Runner: {{#if config.project.tech_stack.test_runner}}{{config.project.tech_stack.test_runner}}{{else}}not detected{{/if}}
+{{#if config.project.tech_stack.ui_framework}}- UI Framework: {{config.project.tech_stack.ui_framework}}{{/if}}
+{{#if config.project.tech_stack.styling}}- Styling: {{config.project.tech_stack.styling}}{{/if}}
+{{#if config.project.tech_stack.state_management}}- State Management: {{config.project.tech_stack.state_management}}{{/if}}
+
+{{#if config.project.tech_stack.ui_framework}}
+### UI Standards (Enforced)
+- **MUST** use **{{config.project.tech_stack.ui_framework}}** for all UI components — do NOT import from other component libraries
+{{#if config.project.tech_stack.styling}}- **MUST** use **{{config.project.tech_stack.styling}}** for all styling — do NOT mix styling approaches{{/if}}
+{{#if config.project.tech_stack.state_management}}- **MUST** use **{{config.project.tech_stack.state_management}}** for state management{{/if}}
+- **NEVER** add `ignoreDuringBuilds: true` or `ignoreBuildErrors: true` to any config file
+{{/if}}
+
+{{#if config.project.conventions}}
+### Project Conventions
+{{#each config.project.conventions.rules}}
+- [{{this.category}}] {{this.description}}
+{{/each}}
+{{/if}}
+
+### Security (Non-Negotiable)
+{{#each policies}}
+{{#if (eq this.id "security")}}
+{{#each this.rules}}
+{{#if (eq this.severity "red")}}
+- {{this.description}}
+{{/if}}
+{{/each}}
+{{/if}}
+{{/each}}
+
+### Quality Gates
+{{#each policies}}
+{{#if (eq this.id "quality")}}
+{{#each this.rules}}
+- {{this.description}}
+{{/each}}
+{{/if}}
+{{/each}}
+
+### Session Management
+{{{sessionInstructions}}}
+
+{{#if workflows.length}}
+### Available Workflows
+{{#each workflows}}
+- **{{this.name}}**: {{this.description}}
+  {{#each this.steps}}
+  {{@index}}. {{this.name}}{{#if this.agent}} (agent: {{this.agent}}){{/if}}: {{this.description}}
+  {{/each}}
+{{/each}}
+{{/if}}
+
+{{#if patterns.length}}
+### Project Patterns
+{{#each patterns}}
+- {{this.name}} → `{{this.file}}`
+{{/each}}
+{{/if}}
+
+### Memory
+Before starting work, check for relevant memories:
+- Run: `sophia memory check --keywords "<relevant keywords>"`
+
+After completing work, record lessons learned:
+- Mistakes: `sophia memory correct --pattern "what" --reason "why" --fix "how" --keywords "k1,k2" --severity medium`
+- Patterns: `sophia memory pattern --desc "what" --impl "how" --keywords "k1,k2"`

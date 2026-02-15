@@ -1,0 +1,84 @@
+policy:
+  id: "quality"
+  name: "Code Quality Policy"
+  version: "1.0.0"
+  description: "Maintains code quality standards in AI-assisted development"
+
+rules:
+  - id: "QA-001"
+    name: "No console.log in production"
+    severity: "yellow"
+    description: "Remove console.log statements before committing"
+    detection:
+      patterns:
+        - "console\\.log\\("
+      file_types: ["*.ts", "*.js", "*.tsx", "*.jsx"]
+      exclude: ["*.test.*", "*.spec.*", "*.config.*", "scripts/*"]
+    teaching:
+      beginner: |
+        console.log statements are useful for debugging but should be removed
+        before committing. They can expose sensitive data and clutter output.
+        Use a proper logging library for production code.
+      intermediate: "console.log detected. Remove or replace with proper logging."
+      advanced: "QA-001: console.log. Remove."
+    fix_suggestion: "Remove console.log or replace with a logging library"
+    auto_fixable: false
+
+  - id: "QA-002"
+    name: "No TODO without context"
+    severity: "yellow"
+    description: "TODO comments should include context about what needs to be done"
+    detection:
+      patterns:
+        - "//\\s*TODO(?!.*:)"
+        - "#\\s*TODO(?!.*:)"
+      file_types: ["*.ts", "*.js", "*.py", "*.go"]
+      exclude: []
+    teaching:
+      beginner: |
+        TODO comments without context are useless to future developers.
+        Always include what needs to be done: // TODO: Add input validation for email field
+      intermediate: "TODO without context. Add description after colon."
+      advanced: "QA-002: TODO needs context."
+    fix_suggestion: "Add context after TODO: // TODO: <description>"
+    auto_fixable: false
+
+  - id: "QA-003"
+    name: "No TypeScript any"
+    severity: "yellow"
+    description: "Avoid using 'any' type in TypeScript"
+    detection:
+      patterns:
+        - ":\\s*any\\b"
+        - "as any\\b"
+      file_types: ["*.ts", "*.tsx"]
+      exclude: ["*.test.*", "*.spec.*", "*.d.ts"]
+    teaching:
+      beginner: |
+        The 'any' type defeats the purpose of TypeScript's type system.
+        It disables all type checking and can hide bugs.
+        Use 'unknown' if the type is truly unknown, or define a proper type.
+      intermediate: "TypeScript 'any' detected. Use proper types or 'unknown'."
+      advanced: "QA-003: 'any' type. Fix."
+    fix_suggestion: "Replace 'any' with a proper type or 'unknown'"
+    auto_fixable: false
+
+  - id: "QA-004"
+    name: "No swallowed exceptions"
+    severity: "yellow"
+    description: "Empty catch blocks hide errors"
+    detection:
+      patterns:
+        - "catch\\s*\\([^)]*\\)\\s*\\{\\s*\\}"
+        - "except:\\s*pass"
+      file_types: ["*.ts", "*.js", "*.py"]
+      exclude: []
+    teaching:
+      beginner: |
+        Empty catch blocks silently swallow errors, making bugs impossible to find.
+        Always log the error or handle it explicitly.
+      intermediate: "Empty catch block. Log or handle the error."
+      advanced: "QA-004: Empty catch. Handle error."
+      topic: "error-handling"
+    fix_suggestion: "Add error logging or handling inside the catch block"
+    auto_fixable: false

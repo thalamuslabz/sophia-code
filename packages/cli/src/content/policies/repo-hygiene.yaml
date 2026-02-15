@@ -1,0 +1,50 @@
+policy:
+  id: "repo-hygiene"
+  name: "Repository Hygiene Policy"
+  version: "1.0.0"
+  description: "Maintains clean repository practices"
+
+rules:
+  - id: "REPO-001"
+    name: "No large binary files"
+    severity: "yellow"
+    description: "Binary files over 1MB should not be committed"
+    detection:
+      type: "git-hook"
+      check: "file_size_threshold"
+      threshold_kb: 1024
+    teaching:
+      beginner: |
+        Large binary files bloat the repository and slow down cloning.
+        Use Git LFS for large files, or store them externally.
+      intermediate: "Large binary file. Use Git LFS or external storage."
+      advanced: "REPO-001: Large binary. Use LFS."
+      topic: "git-hygiene"
+    fix_suggestion: "Use Git LFS or store the file externally"
+    auto_fixable: false
+
+  - id: "REPO-002"
+    name: "No build-bypass configurations"
+    severity: "red"
+    description: "Build error suppression hides real problems and degrades code quality"
+    detection:
+      type: "pattern"
+      patterns:
+        - "ignoreDuringBuilds:\\s*true"
+        - "ignoreBuildErrors:\\s*true"
+      file_types:
+        - "next.config.*"
+        - "*.config.ts"
+        - "*.config.js"
+        - "*.config.mjs"
+      exclude:
+        - "node_modules/**"
+    teaching:
+      beginner: |
+        Build-bypass settings suppress errors during builds. This means broken code
+        can reach production. Fix the underlying TypeScript or linting errors instead.
+      intermediate: "Build-bypass detected. Fix underlying errors rather than suppressing them."
+      advanced: "REPO-002: Build-bypass. Fix errors."
+      topic: "build-integrity"
+    fix_suggestion: "Remove build-bypass settings and fix the underlying errors"
+    auto_fixable: false

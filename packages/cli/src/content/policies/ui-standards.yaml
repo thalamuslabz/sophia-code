@@ -1,0 +1,108 @@
+policy:
+  id: "ui-standards"
+  name: "UI Standards Policy"
+  version: "1.0.0"
+  description: "Enforces consistent UI framework, styling, and build configuration"
+
+rules:
+  - id: "UI-001"
+    name: "Use project's component library"
+    severity: "yellow"
+    description: "Components must use the project's designated UI framework"
+    detection:
+      type: "pattern"
+      patterns:
+        - "from ['\"]@mui/material"
+        - "from ['\"]@chakra-ui"
+        - "from ['\"]antd"
+        - "from ['\"]@mantine"
+        - "from ['\"]@headlessui"
+      file_types:
+        - "*.ts"
+        - "*.tsx"
+        - "*.js"
+        - "*.jsx"
+      exclude:
+        - "node_modules/**"
+        - "*.config.*"
+    teaching:
+      beginner: |
+        This project uses a specific UI component library. Importing from a different
+        library creates inconsistency and increases bundle size. Use the project's
+        designated component library instead.
+      intermediate: "Wrong UI library imported. Use the project's designated component library."
+      advanced: "UI-001: Wrong component library."
+      topic: "ui-consistency"
+    fix_suggestion: "Import components from the project's designated UI framework instead"
+    auto_fixable: false
+
+  - id: "UI-002"
+    name: "Use project's styling system"
+    severity: "yellow"
+    description: "Styling must use the project's designated styling approach"
+    detection:
+      type: "pattern"
+      patterns:
+        - "from ['\"]styled-components"
+        - "from ['\"]@emotion/styled"
+        - "from ['\"]@emotion/css"
+        - "import ['\"].*\\.module\\.css"
+      file_types:
+        - "*.ts"
+        - "*.tsx"
+        - "*.js"
+        - "*.jsx"
+      exclude:
+        - "node_modules/**"
+    teaching:
+      beginner: |
+        This project uses a specific styling approach. Mixing styling systems
+        creates inconsistency and makes maintenance harder.
+      intermediate: "Mixed styling approach detected. Use the project's designated styling system."
+      advanced: "UI-002: Mixed styling."
+      topic: "ui-consistency"
+    fix_suggestion: "Use the project's designated styling system"
+    auto_fixable: false
+
+  - id: "UI-003"
+    name: "No build-bypass configs"
+    severity: "red"
+    description: "Build errors must not be bypassed — they indicate real problems"
+    detection:
+      type: "pattern"
+      patterns:
+        - "ignoreDuringBuilds:\\s*true"
+        - "ignoreBuildErrors:\\s*true"
+        - "typescript:\\s*\\{[^}]*ignoreBuildErrors:\\s*true"
+        - "eslint:\\s*\\{[^}]*ignoreDuringBuilds:\\s*true"
+      file_types:
+        - "next.config.*"
+        - "*.config.ts"
+        - "*.config.js"
+        - "*.config.mjs"
+      exclude:
+        - "node_modules/**"
+    teaching:
+      beginner: |
+        Build-bypass settings like `ignoreDuringBuilds: true` hide real errors.
+        These errors will still exist in production but won't be caught during builds.
+        Fix the underlying issues instead of suppressing them.
+      intermediate: |
+        Build-bypass detected. This masks real errors that will affect production.
+        Fix the underlying TypeScript/ESLint errors instead.
+      advanced: "UI-003: Build-bypass config. Fix underlying errors."
+      topic: "build-integrity"
+      code_example:
+        wrong: |
+          // next.config.js
+          module.exports = {
+            eslint: { ignoreDuringBuilds: true },
+            typescript: { ignoreBuildErrors: true },
+          }
+        right: |
+          // next.config.js
+          module.exports = {
+            // No build bypasses — all errors are caught
+          }
+    fix_suggestion: "Remove the build-bypass setting and fix the underlying errors"
+    auto_fixable: false

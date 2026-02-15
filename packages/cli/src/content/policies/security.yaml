@@ -1,0 +1,90 @@
+policy:
+  id: "security"
+  name: "Security Policy"
+  version: "1.0.0"
+  description: "Prevents common security mistakes in AI-assisted development"
+
+rules:
+  - id: "SEC-001"
+    name: "No hardcoded secrets"
+    severity: "red"
+    description: "API keys, passwords, and tokens must not appear in source code"
+    detection:
+      patterns:
+        - "(api[_-]?key|secret[_-]?key|password|token)\\s*[=:]\\s*['\"][A-Za-z0-9+/=]{16,}"
+        - "sk_(live|test)_[A-Za-z0-9]{20,}"
+        - "ghp_[A-Za-z0-9]{36}"
+        - "AKIA[A-Z0-9]{16}"
+        - "xox[bpas]-[A-Za-z0-9-]+"
+      file_types: ["*.ts", "*.js", "*.py", "*.go", "*.java", "*.yaml", "*.json", "*.toml"]
+      exclude: ["*.test.*", "*.spec.*", "*.md", "*.example", "package-lock.json", "*.d.ts"]
+    teaching:
+      beginner: |
+        API keys in source code are the #1 cause of security breaches in open source projects.
+        Services like Stripe and GitHub actively scan repos and will revoke exposed keys.
+        Use environment variables instead: process.env.YOUR_KEY_NAME
+      intermediate: |
+        Hardcoded secret detected. Use environment variables or a secrets manager.
+      advanced: "SEC-001: Hardcoded secret. Use env vars."
+      topic: "secrets-management"
+    fix_suggestion: "Replace the hardcoded value with an environment variable"
+    auto_fixable: false
+
+  - id: "SEC-002"
+    name: "No .env files committed"
+    severity: "red"
+    description: "Git commits must not contain .env files with secrets"
+    detection:
+      type: "git-hook"
+      file_patterns: [".env", ".env.local", ".env.production"]
+    teaching:
+      beginner: |
+        .env files contain secrets like database passwords and API keys.
+        If committed to git, anyone with repo access can see them.
+        Add .env to .gitignore and use .env.example for templates.
+      intermediate: ".env file in staged changes. Add to .gitignore."
+      advanced: "SEC-002: .env file staged."
+    fix_suggestion: "Add .env to .gitignore and remove from staging"
+    auto_fixable: false
+
+  - id: "SEC-003"
+    name: "No eval or equivalent"
+    severity: "red"
+    description: "eval() and similar dynamic code execution are dangerous"
+    detection:
+      patterns:
+        - "\\beval\\s*\\("
+        - "new Function\\s*\\("
+      file_types: ["*.ts", "*.js", "*.tsx", "*.jsx"]
+      exclude: ["*.test.*", "*.spec.*", "*.config.*", "webpack.*", "vite.*"]
+    teaching:
+      beginner: |
+        eval() executes arbitrary code and is a major security risk.
+        Attackers can inject malicious code through user input.
+        Use safer alternatives like JSON.parse() or template literals.
+      intermediate: "Dynamic code execution detected. Use safer alternatives."
+      advanced: "SEC-003: eval() usage. Remove."
+    fix_suggestion: "Replace eval() with a safer alternative like JSON.parse()"
+    auto_fixable: false
+
+  - id: "SEC-004"
+    name: "Input validation recommended"
+    severity: "yellow"
+    description: "All API endpoints should validate input"
+    detection:
+      patterns:
+        - "req\\.body\\[|req\\.body\\."
+        - "req\\.params\\[|req\\.params\\."
+        - "req\\.query\\[|req\\.query\\."
+        - "request\\.json\\(\\)"
+      file_types: ["*.ts", "*.js"]
+      exclude: ["*.test.*", "*.spec.*"]
+    teaching:
+      beginner: |
+        Never trust user input directly. Always validate with a schema library
+        like Zod, Joi, or class-validator before using request data.
+      intermediate: "Unvalidated request input. Add schema validation."
+      advanced: "SEC-004: Add input validation."
+      topic: "input-validation"
+    fix_suggestion: "Add Zod or similar schema validation before using request data"
+    auto_fixable: false

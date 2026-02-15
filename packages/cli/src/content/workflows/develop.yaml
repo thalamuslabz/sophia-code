@@ -1,0 +1,29 @@
+workflow:
+  name: "Full Development"
+  description: "Complete SDLC workflow with governance checkpoints"
+  version: "1.0.0"
+
+steps:
+  - name: "Plan"
+    agent: "architect"
+    description: "Review requirements and plan implementation"
+    outputs: ["architecture_plan", "file_list"]
+
+  - name: "Implement"
+    agent: "coding"
+    description: "Write code following the plan"
+    outputs: ["implementation", "tests"]
+
+  - name: "Test"
+    agent: "testing"
+    description: "Verify implementation with tests"
+    outputs: ["test_results", "coverage_report"]
+
+  - name: "Security Review"
+    agent: "security"
+    description: "Check for security issues"
+    outputs: ["security_report"]
+
+  - name: "Verify"
+    description: "Run sophia verify for health check"
+    outputs: ["health_score"]

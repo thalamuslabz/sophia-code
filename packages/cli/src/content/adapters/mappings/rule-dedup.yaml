@@ -1,0 +1,50 @@
+semantic_groups:
+  - group: "secrets_management"
+    sophia_rule: "SEC-001"
+    patterns:
+      - "hardcod"
+      - "secret"
+      - "api.key"
+      - "api_key"
+      - "env var"
+      - "environment variable"
+      - ".env"
+      - "never commit"
+
+  - group: "input_validation"
+    sophia_rule: "SEC-002"
+    patterns:
+      - "validate"
+      - "sanitize"
+      - "user input"
+      - "req.body"
+      - "zod"
+      - "joi"
+
+  - group: "test_coverage"
+    sophia_rule: "QA-001"
+    patterns:
+      - "test"
+      - "coverage"
+      - "80%"
+      - "90%"
+      - "write tests"
+      - "no code without test"
+
+  - group: "error_handling"
+    sophia_rule: "QA-003"
+    patterns:
+      - "error handling"
+      - "try.catch"
+      - "exception"
+      - "fail fast"
+      - "never swallow"
+
+  - group: "type_safety"
+    sophia_rule: "QA-004"
+    patterns:
+      - "strict mode"
+      - "no any"
+      - "type check"
+      - "typescript strict"
+      - "type hint"
