@@ -21,13 +21,32 @@ import { verifyCommand } from "./commands/verify.js";
 import { cleanCommand } from "./commands/clean.js";
 import { dashboardCommand } from "./commands/dashboard.js";
 import { watchCommand } from "./commands/watch.js";
+import { updateCommand } from "./commands/update.js";
+import { enforceVersion } from "./core/version-manager.js";
 
 const program = new Command();
 
 program
   .name("sophia")
   .description("CLI-first governance tool for AI-assisted development")
-  .version(SOPHIA_VERSION, "-V, --version", "output the version number");
+  .version(SOPHIA_VERSION, "-V, --version", "output the version number")
+  .hook("preAction", async (thisCommand) => {
+    // Skip version enforcement for certain commands
+    const skipCommands = ["update", "init", "--version", "-V"];
+    const invokedCommand = thisCommand.args[0];
+
+    if (invokedCommand && skipCommands.includes(invokedCommand)) {
+      return;
+    }
+
+    // Skip if SOPHIA_SKIP_VERSION_CHECK is set
+    if (process.env["SOPHIA_SKIP_VERSION_CHECK"]) {
+      return;
+    }
+
+    // Enforce version policy (may exit if locked)
+    await enforceVersion();
+  });
 
 program.addCommand(initCommand);
 program.addCommand(statusCommand);
@@ -42,5 +61,6 @@ program.addCommand(verifyCommand);
 program.addCommand(cleanCommand);
 program.addCommand(dashboardCommand);
 program.addCommand(watchCommand);
+program.addCommand(updateCommand);
 
 program.parse();

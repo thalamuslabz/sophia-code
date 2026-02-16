@@ -1,0 +1,19 @@
+{
+  "$schema": "https://raw.githubusercontent.com/TheMethodArq/sophia-community/main/.sophia/version-policy.schema.json",
+  "latestVersion": "1.0.0",
+  "minimumVersion": "0.9.0",
+  "warningThreshold": 1,
+  "lockdownThreshold": 2,
+  "enforcementEnabled": true,
+  "criticalVersions": [],
+  "updateMessage": "New features: Testing framework, version enforcement, and auto-updates",
+  "changelogUrl": "https://github.com/TheMethodArq/sophia-community/releases",
+  "announcements": [
+    {
+      "id": "v0.0.4-testing",
+      "message": "v0.0.4 adds comprehensive testing framework - see the docs!",
+      "minVersion": "0.0.1",
+      "maxVersion": "0.0.3"
+    }
+  ]
+}

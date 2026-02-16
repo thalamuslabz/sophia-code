@@ -1,0 +1,65 @@
+name: Version Policy Check
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.sophia/version-policy.json'
+  pull_request:
+    branches: [main]
+    paths:
+      - '.sophia/version-policy.json'
+
+jobs:
+  validate-version-policy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Validate version policy JSON
+        run: |
+          if ! jq empty .sophia/version-policy.json; then
+            echo "❌ version-policy.json is not valid JSON"
+            exit 1
+          fi
+          echo "✅ version-policy.json is valid JSON"
+
+      - name: Check version consistency
+        run: |
+          LATEST=$(jq -r '.latestVersion' .sophia/version-policy.json)
+          MINIMUM=$(jq -r '.minimumVersion' .sophia/version-policy.json)
+
+          echo "Latest version: $LATEST"
+          echo "Minimum version: $MINIMUM"
+
+          # Parse versions for comparison
+          LATEST_MAJOR=$(echo $LATEST | cut -d. -f1)
+          LATEST_MINOR=$(echo $LATEST | cut -d. -f2)
+          LATEST_PATCH=$(echo $LATEST | cut -d. -f3)
+
+          MIN_MAJOR=$(echo $MINIMUM | cut -d. -f1)
+          MIN_MINOR=$(echo $MINIMUM | cut -d. -f2)
+          MIN_PATCH=$(echo $MINIMUM | cut -d. -f3)
+
+          # Check if minimum <= latest
+          if [ "$MIN_MAJOR" -gt "$LATEST_MAJOR" ] || \
+             ([ "$MIN_MAJOR" -eq "$LATEST_MAJOR" ] && [ "$MIN_MINOR" -gt "$LATEST_MINOR" ]) || \
+             ([ "$MIN_MAJOR" -eq "$LATEST_MAJOR" ] && [ "$MIN_MINOR" -eq "$LATEST_MINOR" ] && [ "$MIN_PATCH" -gt "$LATEST_PATCH" ]); then
+            echo "❌ minimumVersion ($MINIMUM) cannot be greater than latestVersion ($LATEST)"
+            exit 1
+          fi
+
+          echo "✅ Version policy is consistent"
+
+      - name: Check lockdown threshold
+        run: |
+          THRESHOLD=$(jq -r '.lockdownThreshold' .sophia/version-policy.json)
+          if [ "$THRESHOLD" -lt 1 ] || [ "$THRESHOLD" -gt 5 ]; then
+            echo "⚠️ lockdownThreshold ($THRESHOLD) is outside recommended range (1-5)"
+          fi
+          echo "✅ Lockdown threshold check complete"
