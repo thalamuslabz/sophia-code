@@ -20,6 +20,14 @@ Thumbs.db
 
 # Testing
 coverage/
+test-results/
+playwright-report/
+playwright/.cache/
+
+# E2E test artifacts (evidence captured but not committed)
+e2e/**/test-evidence/
+e2e/**/test-work/
+e2e/**/*.db
 
 # Sophia runtime (ephemeral - do not commit)
 .sophia/sophia.db
