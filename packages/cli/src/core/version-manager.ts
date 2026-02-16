@@ -91,8 +91,8 @@ function calculateVersionsBehind(local: string, latest: string): number {
   const latestParts = parseVersion(latest);
 
   // Simple calculation: major * 100 + minor * 10 + patch differences
-  const localNum = localParts[0] * 100 + (localParts[1] || 0) * 10 + (localParts[2] || 0);
-  const latestNum = latestParts[0] * 100 + (latestParts[1] || 0) * 10 + (latestParts[2] || 0);
+  const localNum = (localParts[0] ?? 0) * 100 + (localParts[1] ?? 0) * 10 + (localParts[2] ?? 0);
+  const latestNum = (latestParts[0] ?? 0) * 100 + (latestParts[1] ?? 0) * 10 + (latestParts[2] ?? 0);
 
   return Math.max(0, latestNum - localNum);
 }
@@ -280,6 +280,11 @@ export async function performUpdate(): Promise<boolean> {
   };
 
   const command = commands[packageManager];
+
+  if (!command) {
+    console.error(chalk.red(`❌ Unknown package manager: ${packageManager}`));
+    return false;
+  }
 
   try {
     execSync(command, {
