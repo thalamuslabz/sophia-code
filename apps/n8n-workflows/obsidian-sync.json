@@ -1,0 +1,57 @@
+{
+  "name": "Obsidian Sync",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "When evidence is created",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "obsidian-sync",
+      "path": "obsidian-sync",
+      "responseMode": "onReceived"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Transform evidence data for Obsidian\nconst evidence = $input.first().json;\n\nreturn {\n  json: {\n    intent_id: evidence.intent_id || evidence.id,\n    project: evidence.project || 'Unknown',\n    status: evidence.status || 'unknown',\n    timestamp: evidence.timestamp || new Date().toISOString(),\n    artifacts: evidence.artifacts || [],\n    test_results: evidence.test_results || null,\n    file_path: `/06-PROJECTS/${evidence.project}/builds/${evidence.intent_id}.md`\n  }\n};"
+      },
+      "name": "Transform Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "command": "echo \"Syncing to Obsidian: {{$json.intent_id}}\""
+      },
+      "name": "Sync to Vault",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "name": "Success",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [850, 300]
+    }
+  ],
+  "connections": {
+    "When evidence is created": {
+      "main": [[{"node": "Transform Data", "type": "main", "index": 0}]]
+    },
+    "Transform Data": {
+      "main": [[{"node": "Sync to Vault", "type": "main", "index": 0}]]
+    },
+    "Sync to Vault": {
+      "main": [[{"node": "Success", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": ["thalamus", "obsidian", "sync"]
+}

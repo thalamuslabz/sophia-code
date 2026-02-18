@@ -1,404 +1,269 @@
 <div align="center">
 
-# Sophia Code
+# 🧠 Thalamus AI
 
-**A reference implementation for AI-assisted software engineering with governance.**
+**The vibe coder's complete development environment.**
 
-[![v0.0.2](https://img.shields.io/badge/version-v0.0.2-00D9FF.svg?style=flat-square)](./CHANGELOG.md)
-[![MIT License](https://img.shields.io/badge/License-MIT-00D9FF.svg?style=flat-square)](LICENSE)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6.svg?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![React](https://img.shields.io/badge/React-18.x-61DAFB.svg?style=flat-square&logo=react&logoColor=black)](https://react.dev/)
-[![Vite](https://img.shields.io/badge/Vite-5.x-646CFF.svg?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Version](https://img.shields.io/badge/version-1.0.0-00D9FF.svg?style=flat-square)](./CHANGELOG.md)
+[![License](https://img.shields.io/badge/License-MIT-00D9FF.svg?style=flat-square)](LICENSE)
+[![Node](https://img.shields.io/badge/Node-18+-43853D.svg?style=flat-square&logo=node.js)](https://nodejs.org/)
+[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED.svg?style=flat-square&logo=docker)](https://docker.com/)
+
+**Describe what you want. Let AI handle the rest. Stay in control.**
+
+[Quick Start](#quick-start) • [Documentation](#documentation) • [Examples](#examples) • [Contributing](#contributing)
 
 </div>
 
 ---
 
-## This is not just a prompt library.
+## 🎯 What is This?
 
-This is a complete governance system.  
-This is not about speed—it's about correctness.
+Thalamus AI is a **complete, integrated development environment** for vibe coders — developers who want to:
 
-**This is about judgment.**
+1. **Describe** what they want in natural language
+2. **Review** AI-generated implementations
+3. **Approve** with confidence (governance enforced)
+4. **Ship** faster with full audit trails
 
-AI has made execution cheap and abundant. What it has *not* made cheap is knowing **what should be done, when, and under what constraints**.
+### The Vibe Coding Flow
 
-Most failures in AI-assisted work don't come from bad tools—they come from:
-
-- Unclear intent
-- Missing requirements  
-- Unspoken assumptions
-- Skipped decision points
-- Work starting before thinking is complete
-
-**Sophia Code exists to solve that problem by making thinking reusable.**
-
----
-
-## The Core Idea: Authority Separated from Labor
-
-```mermaid
-graph TB
-    subgraph COGNEXA ["Cognexa (System of Thought)"]
-        C1[Artifact lifecycle]
-        C2[Intents • Gates • Contracts]
-        C3[Transition rules]
-    end
-    
-    subgraph SOPHIA ["Sophia (Governance Authority)"]
-        S1[Enforces gates]
-        S2[Verifies intent]
-        S3[Escalates to humans]
-    end
-    
-    subgraph EXECUTION ["Execution Engines (The Labor)"]
-        E1[UI / CLI / Agents]
-        E2[Runs after approval]
-        E3[Produces outputs]
-    end
-    
-    COGNEXA -->|governs| SOPHIA
-    SOPHIA -->|authorizes| EXECUTION
-    
-    style COGNEXA fill:#0A0E27,stroke:#00D9FF,stroke-width:2px,color:#fff
-    style SOPHIA fill:#0A0E27,stroke:#00D9FF,stroke-width:2px,color:#fff
-    style EXECUTION fill:#0A0E27,stroke:#00D9FF,stroke-width:2px,color:#fff
+```
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│   Describe  │────▶│    Build    │────▶│    Review   │────▶│    Ship     │
+│             │     │             │     │             │     │             │
+│ "Build auth │     │ AI agents   │     │ Screen      │     │ Merge with  │
+│  system"    │     │ implement   │     │ recordings  │     │ confidence  │
+└─────────────┘     └─────────────┘     └─────────────┘     └─────────────┘
+       │                   │                   │                   │
+       ▼                   ▼                   ▼                   ▼
+  Open WebUI          Auto-Claude         Evidence           Obsidian
+  (chat)              (execution)         (audit trail)      (docs sync)
 ```
 
-| Layer | Role | What it does |
-|:------|:-----|:-------------|
-| **Cognexa** | System of Thought | Defines the artifact model, lifecycle rules, and transition logic |
-| **Sophia** | Governance Authority | Enforces gates, verifies intent, escalates to humans |
-| **Execution** | The Labor | UI, CLI, agents—runs *only after* governance approves |
-
-> Work happens only after governance approves.  
-> Intent must be explicit before any execution begins.
-
 ---
 
-## Meet Sophia
+## 🚀 Quick Start
 
-<img src="docs/assets/sophia-mascot.png" alt="Sophia" width="140" align="left" style="margin-right: 24px; margin-bottom: 12px;" />
-
-**Sophia** is the Self-Organizing Platform for Human-Inclusive Autonomy.
-
-If Cognexa is the mind, Sophia is the faculty of **judgment**.
-
-She doesn't replace humans—she amplifies them. She automates the predictable and highlights the exceptional. She enforces gates, locks intent, verifies constraints, and ensures every action is auditable.
-
-When confidence drops or risk rises, Sophia escalates. She never acts beyond her clearance. Every decision has context, a confidence score, and an explanation.
-
-**Transparency isn't an add-on. It's the operating principle.**
-
-<br clear="left" />
-
----
-
-## Artifact Lifecycle
-
-```mermaid
-graph LR
-    I[Intent] -->|approved| G[Gate]
-    G -->|passed| C[Contract]
-    C -->|signed| X[Execution]
-    X -->|completed| V[Verification]
-    
-    I -.->|"What & Why"| I
-    G -.->|"May we proceed?"| G
-    C -.->|"Terms of work"| C
-    X -.->|"The work happens"| X
-    V -.->|"Did it match?"| V
-    
-    style I fill:#0A0E27,stroke:#00D9FF,stroke-width:2px,color:#fff
-    style G fill:#0A0E27,stroke:#00D9FF,stroke-width:2px,color:#fff
-    style C fill:#0A0E27,stroke:#00D9FF,stroke-width:2px,color:#fff
-    style X fill:#0A0E27,stroke:#00D9FF,stroke-width:2px,color:#fff
-    style V fill:#0A0E27,stroke:#00D9FF,stroke-width:2px,color:#fff
-```
-
-Each transition requires explicit approval. No skipping steps.
-
----
-
-## What Lives Here
-
-Sophia Code is a **reference implementation** with governance at its core. It includes both the governance framework and production-ready code.
-
-<table>
-<tr>
-<td width="50%" valign="top">
-
-### Governance
-- **Intents** — Reusable templates for framing work correctly
-- **Gates** — Explicit decision checkpoints before work proceeds
-- **Contracts** — Structured expectations for SDLC artifacts
-
-</td>
-<td width="50%" valign="top">
-
-### Implementation
-- **React + TypeScript UI** — Reference visualization interface
-- **Vite Build System** — Fast, optimized development workflow
-- **Modular Architecture** — Clean separation of concerns
-
-</td>
-</tr>
-</table>
-
----
-
-## The Problem We Solve
-
-```mermaid
-graph LR
-    subgraph BEFORE ["Unverifiable Work"]
-        B1[Intent implicit]
-        B2[Decisions undocumented]
-        B3[Assumptions hidden]
-        B4[No audit trail]
-    end
-    
-    subgraph AFTER ["Governed Execution"]
-        A1[Intent = artifact]
-        A2[Decision points explicit]
-        A3[Constraints enforceable]
-        A4[Full traceability]
-    end
-    
-    BEFORE -->|Cognexa| AFTER
-    
-    style BEFORE fill:#1a1a2e,stroke:#ff6b6b,stroke-width:2px,color:#fff
-    style AFTER fill:#0A0E27,stroke:#00D9FF,stroke-width:2px,color:#fff
-```
-
-When work becomes "prompt-shaped," the failure modes are subtle until they're catastrophic.
-
----
-
-## Who This Is For
-
-Sophia Code is built for people who are already accountable for outcomes:
-
-- Senior engineers and architects  
-- Platform and infrastructure leaders  
-- Technical consultants and VARs  
-- Auditors, assessors, and assurance professionals  
-- Practitioners working in regulated or high-risk domains
-
-If you've ever said:
-
-> *"We shouldn't have started building yet."*  
-> *"We missed a decision we should have documented."*  
-> *"AI moved fast, but we lost control."*
-
-You're in the right place.
-
----
-
-## Design Principles
-
-| Principle | What it means |
-|:----------|:--------------|
-| **Governance First** | The system exists to govern, not to execute |
-| **Artifacts Over Chat** | Structured, versioned artifacts—not ephemeral conversations |
-| **Immutability Over Revisionism** | Once approved, intent is locked |
-| **Human Authority** | AI proposes, humans decide |
-| **OSS Credibility** | Transparent, auditable, community-owned |
-
----
-
-## Quick Start
-
-Get Sophia Code running locally in under 5 minutes.
-
-### Prerequisites
-
-- Node.js 18+ (20+ recommended)
-- npm 9+ or yarn 1.22+
-- Git 2.30+
-
-### Install & Run
+### One-Command Install
 
 ```bash
-# Clone the repository
-git clone https://github.com/TheMethodArq/sophia.code.git
-cd sophia.code
-
-# Install dependencies (clean install for reproducibility)
-npm ci
-
-# Start the development server
-npm run dev
+git clone https://github.com/thalamus-ai/thalamus-ai.git
+cd thalamus-ai
+./install.sh
 ```
 
-Open **[http://localhost:5173](http://localhost:5173)** to see the reference implementation.
+**Requirements:**
+- Node.js 18+ 
+- Docker Desktop (optional, recommended)
 
-### Available Scripts
+That's it. The installer sets up everything.
 
-| Command | Description |
-|:--------|:------------|
-| `npm run dev` | Start development server (Vite) |
-| `npm run build` | Create production build |
-| `npm run preview` | Preview production build locally |
-| `npm run lint` | Run ESLint with auto-fix |
-| `npm run format` | Run Prettier formatter |
-| `npm run test` | Run test suite |
-| `npm run typecheck` | Run TypeScript type checker |
-
-### Project Structure
-
-```
-sophia.code/
-├── src/                  # Core application
-│   ├── components/       # React UI components
-│   ├── hooks/           # Custom React hooks
-│   ├── stores/          # State management
-│   ├── types/           # TypeScript definitions
-│   └── utils/           # Utility functions
-├── public/              # Static assets
-├── docs/                # Documentation
-│   ├── ARCHITECTURE.md  # System architecture
-│   ├── MEET_SOPHIA.md   # Governance persona
-│   └── user/            # User guides
-└── dist/                # Build output (generated)
-```
-
----
-
-## Deployment
-
-Sophia Code is designed for flexible deployment scenarios.
-
-### Vite Preview (Local Production Test)
+### Your First Build
 
 ```bash
-# Build for production
-npm run build
+# 1. Open the chat interface
+open http://localhost:3115
 
-# Preview locally
-npm run preview
+# 2. Type your request and /build command
+"Create a React todo app with TypeScript and localStorage"
+/build
+
+# 3. Watch the dashboard
+open http://localhost:9473
 ```
 
-### Static Hosting
+---
 
-The build output in `dist/` is a static site ready for any hosting platform:
+## 🏗️ What's Included
 
-- **Vercel**: Zero-config deployment with `vercel --prod`
-- **Netlify**: Drag-and-drop `dist/` folder or use CLI
-- **GitHub Pages**: Serve `dist/` directory
-- **AWS S3 + CloudFront**: Upload `dist/` contents to S3 bucket
+### Core Components
 
-See [PRODUCTION_READINESS.md](docs/PRODUCTION_READINESS.md) for complete deployment checklist including security headers, environment configuration, and monitoring.
+| Component | Purpose | URL |
+|-----------|---------|-----|
+| **Sophia CLI** | Governance, policies, session management | `sophia` |
+| **Open WebUI** | AI chat interface | http://localhost:3115 |
+| **n8n** | Workflow automation | http://localhost:3118 |
+| **Orchestrator** | Build management, intent registry | http://localhost:7654 |
+| **Dashboard** | Project health, sessions, policies | http://localhost:9473 |
+| **Leantime** | Project management | http://localhost:8081 |
+| **Qdrant** | Vector search | http://localhost:6333 |
 
-### Environment Configuration
+### Features
 
-Create `.env.local` for local overrides (never commit):
+- ✅ **Intent-Driven Development** — Describe features, get implementations
+- ✅ **Governed AI** — Security policies enforced automatically
+- ✅ **Session Management** — Track AI work, prevent conflicts
+- ✅ **Evidence Recording** — Screen captures, audit trails
+- ✅ **📚 Auto Documentation** — Syncs to Obsidian automatically
+- ✅ **📊 Project Management** — Leantime ticket integration
+- ✅ **🔍 Semantic Search** — Qdrant vector search across all docs
+- ✅ **Policy Enforcement** — Blocks secrets, enforces standards
+- ✅ **Memory System** — AI learns from corrections
+
+---
+
+## 📖 Documentation
+
+| Guide | For | Description |
+|-------|-----|-------------|
+| [Vibe Coder's Guide](./docs/VIBE_CODER_GUIDE.md) | 🎵 Everyone | Start here — complete beginner guide |
+| [Architecture](./docs/ARCHITECTURE.md) | 🏗️ Developers | System design and components |
+| [CLI Reference](./docs/CLI_REFERENCE.md) | ⌨️ Power users | All `sophia` commands |
+| [Policy Guide](./docs/POLICY_GUIDE.md) | 🛡️ Teams | Customizing governance |
+| [Self-Hosting](./docs/SELF_HOSTING.md) | ☁️ Admins | Production deployment |
+
+---
+
+## 💻 Examples
+
+### Basic Usage
 
 ```bash
-VITE_API_URL=http://localhost:3000
-VITE_ENABLE_ANALYTICS=false
-VITE_DEBUG_MODE=true
+# Initialize Sophia in a project
+cd my-project
+sophia init
+
+# Start a development session
+sophia session start --intent "Add user authentication"
+
+# Claim files to work on
+sophia session claim "src/auth/**"
+
+# Check governance before commit
+sophia verify
+```
+
+### AI-Assisted Development
+
+```bash
+# In Open WebUI (http://localhost:3115)
+> Build a REST API with Express that:
+>   - Has CRUD endpoints for users
+>   - Uses JWT authentication
+>   - Includes input validation
+>   - Has unit tests
+> /build
+
+# AI agents will:
+# 1. Generate structured spec
+# 2. Create implementation plan
+# 3. Write code following policies
+# 4. Run tests
+# 5. Record evidence
+# 6. Sync documentation
 ```
 
 ---
 
-## How the Project Fits
+## 🛡️ Security & Governance
 
-```mermaid
-graph TB
-    subgraph CODE ["Sophia Code (Reference)"]
-        CC1[Reference implementation]
-        CC2[Governance + code]
-        CC3[Documentation]
-    end
-    
-    subgraph LOCAL ["Sophia (Local / Enterprise)"]
-        L1[Enforces locally]
-        L2[Adds org policy]
-        L3[Audits + adapts]
-    end
-    
-    subgraph IMPL ["Implementations"]
-        I1[Teams]
-        I2[Agents]
-        I3[CI/CD]
-    end
-    
-    CODE -->|reference implementation| LOCAL
-    LOCAL -->|governs| IMPL
-    
-    style CODE fill:#0A0E27,stroke:#00D9FF,stroke-width:2px,color:#fff
-    style LOCAL fill:#0A0E27,stroke:#00D9FF,stroke-width:2px,color:#fff
-    style IMPL fill:#0A0E27,stroke:#00D9FF,stroke-width:2px,color:#fff
+Thalamus automatically enforces:
+
+| Policy | What It Does |
+|--------|--------------|
+| **No Secrets** | Blocks hardcoded API keys, tokens |
+| **No .env Commits** | Prevents secret files in git |
+| **Input Validation** | Requires validation on API endpoints |
+| **Test Coverage** | Warns on new code without tests |
+| **Code Quality** | Enforces lint rules, type checking |
+
+Policies are customizable per project. See [Policy Guide](./docs/POLICY_GUIDE.md).
+
+---
+
+## 🏛️ Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                         THALAMUS AI STACK                                │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│  PRESENTATION LAYER                                                      │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐ │
+│  │  Open WebUI  │  │   Dashboard  │  │     n8n      │  │  VS Code Ext │ │
+│  │  (Chat)      │  │  (Governance)│  │ (Workflows)  │  │  (IDE Integ) │ │
+│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘ │
+│         │                 │                 │                 │         │
+├─────────┴─────────────────┴─────────────────┴─────────────────┴─────────┤
+│  ORCHESTRATION LAYER                                                     │
+│  ┌───────────────────────────────────────────────────────────────────┐  │
+│  │                    Thalamus Orchestrator                           │  │
+│  │   Intent Registry • Build Management • Evidence Vault              │  │
+│  └─────────────────────────────┬─────────────────────────────────────┘  │
+│                                │                                         │
+├────────────────────────────────┼────────────────────────────────────────┤
+│  GOVERNANCE LAYER              │                                         │
+│  ┌─────────────────────────────┼─────────────────────────────────────┐  │
+│  │                    Sophia Code (CLI + Core)                        │  │
+│  │   Policy Engine • Session Manager • Memory System • Health Score   │  │
+│  └─────────────────────────────┬─────────────────────────────────────┘  │
+│                                │ validates & governs                     │
+├────────────────────────────────┼────────────────────────────────────────┤
+│  EXECUTION LAYER               ▼                                         │
+│  ┌───────────────────────────────────────────────────────────────────┐  │
+│  │                    AI Agents (Auto-Claude, etc.)                   │  │
+│  │   Code Generation • Testing • Documentation • Evidence Capture     │  │
+│  └───────────────────────────────────────────────────────────────────┘  │
+│                                                                          │
+└─────────────────────────────────────────────────────────────────────────┘
 ```
 
-This repository provides the reference implementation.  
-Sophia enforces gates locally or in enterprise environments.
+---
+
+## 🤝 Contributing
+
+We welcome contributions! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
+
+### Development Setup
+
+```bash
+# Clone and install
+git clone https://github.com/thalamus-ai/thalamus-ai.git
+cd thalamus-ai
+npm run setup:dev
+
+# Run tests
+npm test
+
+# Run specific package tests
+cd packages/cli && npm test
+```
 
 ---
 
-## Documentation
+## 🗺️ Roadmap
 
-### Technical Documentation
-
-| Document | Description |
-|:---------|:------------|
-| **[Architecture](docs/ARCHITECTURE.md)** | The three-layer system: Cognexa, Sophia, and Execution |
-| **[Meet Sophia](docs/MEET_SOPHIA.md)** | Persona, mission, and how she governs |
-| **[Production Readiness](docs/PRODUCTION_READINESS.md)** | Deployment checklist and production setup |
-| **[Security Policy](SECURITY.md)** | Zero Trust through governance |
-| **[Contributing](CONTRIBUTING.md)** | How to contribute (correctness over speed) |
-
-### User Documentation
-
-| Document | Description |
-|:---------|:------------|
-| **[Installation Guide](docs/user/INSTALL.md)** | Step-by-step installation instructions |
-| **[Setup Guide](docs/user/SETUP_GUIDE.md)** | Configuration and API setup guide |
-| **[User Guide](docs/user/USER_GUIDE.md)** | Complete guide to using Sophia Code |
-| **[VSCode Integration](docs/user/VSCODE_INTEGRATION.md)** | Using Sophia with VSCode |
-| **[Troubleshooting](docs/user/TROUBLESHOOTING.md)** | Solutions to common issues |
-| **[Admin Guide](docs/user/ADMIN_GUIDE.md)** | Guide for system administrators |
+- [ ] Multi-model support (GPT-4, Claude, local LLMs)
+- [ ] GitHub/GitLab integration
+- [ ] Team collaboration features
+- [ ] Mobile app for approvals
+- [ ] Custom agent marketplace
+- [ ] AI-powered code review
 
 ---
 
-## Contribution Model
+## 📜 License
 
-We don't accept drive-by PRs. Contributions must include:
-
-- **Metadata and rationale** — why this artifact exists
-- **Versioning** — all artifacts are hashed and immutable once merged
-- **Maintainer review** — governance applies to the repo itself
-- **No anonymous publishing** — accountability is non-negotiable
+MIT License — see [LICENSE](./LICENSE) for details.
 
 ---
 
-## One Sentence Summary
+## 🙏 Acknowledgments
 
-<div align="center">
-
-**Sophia Code provides a reference implementation that turns individual judgment into shared, enforceable practice—**  
-**so AI-assisted work stays intentional, auditable, and human-led.**
-
-</div>
-
----
-
-## Who We Are
-
-Sophia Code is stewarded by **Thalamus**.
-
-We build systems that sit above execution—systems concerned with reasoning, judgment, governance, and accountability.
-
-We are not here to replace humans with AI.  
-We are here to make sure AI operates within human intent.
+- [Open WebUI](https://github.com/open-webui/open-webui) — Chat interface
+- [n8n](https://n8n.io/) — Workflow automation
+- [Claude Code](https://github.com/anthropics/claude-code) — AI agent inspiration
+- [Auto-Claude](https://github.com/thalamus-ai/auto-claude) — Agent execution
 
 ---
 
 <div align="center">
 
-Made with ❤️ by **Thalamus**
+**Built with ❤️ by Thalamus AI**
 
-*This is how professionals think when the stakes are real.*
+[Website](https://thalamus.ai) • [Discord](https://discord.gg/thalamus) • [Twitter](https://twitter.com/thalamusai)
+
+*Vibe on.* 🎵
 
 </div>

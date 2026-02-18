@@ -1,0 +1,38 @@
+{
+  "name": "@thalamus/leantime-integration",
+  "version": "1.0.0",
+  "description": "Leantime project management integration for Thalamus AI",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "leantime-sync": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@sophia-code/shared": "1.0.0",
+    "commander": "^12.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "~5.6.0",
+    "vitest": "^2.1.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "leantime",
+    "project-management",
+    "thalamus",
+    "ai"
+  ],
+  "author": "Thalamus AI",
+  "license": "MIT"
+}

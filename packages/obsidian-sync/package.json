@@ -1,0 +1,41 @@
+{
+  "name": "@thalamus/obsidian-sync",
+  "version": "1.0.0",
+  "description": "Obsidian vault integration for Thalamus AI - syncs build evidence and project documentation",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "obsidian-sync": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@sophia-code/shared": "1.0.0",
+    "chokidar": "^4.0.0",
+    "commander": "^12.1.0",
+    "yaml": "^2.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "~5.6.0",
+    "vitest": "^2.1.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "obsidian",
+    "documentation",
+    "sync",
+    "thalamus",
+    "ai"
+  ],
+  "author": "Thalamus AI",
+  "license": "MIT"
+}

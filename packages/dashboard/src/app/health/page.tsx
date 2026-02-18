@@ -82,7 +82,7 @@ export default function HealthPage() {
                 <tbody>
                   {data.history.map((entry, i) => {
                     const prev = data.history[i + 1];
-                    const diff = prev ? entry.overall_score - prev.score : 0;
+                    const diff = prev ? entry.overall_score - prev.overall_score : 0;
                     return (
                       <tr key={i}>
                         <td className="mono" style={{ fontSize: "0.85rem" }}>{new Date(entry.created_at).toLocaleString()}</td>

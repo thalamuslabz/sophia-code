@@ -1,0 +1,120 @@
+{
+  "name": "Intent Capture",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "sophia-intent-created",
+        "responseMode": "responseNode"
+      },
+      "name": "Intent Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "sophia-intent-created"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse intent from webhook\nconst intent = $json.body?.intent || $json.body;\n\nif (!intent || !intent.intent_id) {\n  return [{\n    json: {\n      error: 'Invalid intent data',\n      received: $json\n    }\n  }];\n}\n\n// Normalize project name\nconst projectMapping = {\n  'aso': 'ASO',\n  'synaptica': 'SYNAPTICA',\n  'sophia': 'SOPHIA',\n  'executioniq': 'ExecutionIQ',\n  'sophia-growth': 'sophia-growth',\n  'general': 'General'\n};\n\nconst projectKey = intent.project?.toLowerCase() || 'general';\nconst projectName = projectMapping[projectKey] || intent.project || 'General';\n\n// Format acceptance criteria as checkboxes\nconst criteriaList = (intent.acceptance_criteria || [])\n  .map(c => `- [ ] ${c}`)\n  .join('\\n');\n\nreturn [{\n  json: {\n    intent: {\n      ...intent,\n      projectName,\n      criteriaList,\n      date: new Date().toISOString().split('T')[0],\n      timestamp: new Date().toISOString()\n    }\n  }\n}];"
+      },
+      "name": "Parse Intent",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Create Obsidian note\nconst fs = require('fs');\nconst path = require('path');\n\nconst intent = $json.intent;\nconst vaultPath = process.env.OBSIDIAN_VAULT_PATH || '/obsidian-vault';\n\nconst projectFolder = path.join(vaultPath, '06-PROJECTS', intent.projectName);\nfs.mkdirSync(projectFolder, { recursive: true });\n\nconst filename = `int-${intent.intent_id}.md`;\nconst filePath = path.join(projectFolder, filename);\n\nconst content = `---\nid: ${intent.intent_id}\ntype: intent\nproject: ${intent.projectName}\nname: ${intent.name || 'unnamed'}\nstatus: pending-approval\ncreated: ${intent.timestamp}\n---\n\n# Intent: ${intent.name || 'Unnamed Intent'}\n\n## 🎯 Description\n${intent.description || 'No description provided'}\n\n## 📋 Acceptance Criteria\n${intent.criteriaList || '- [ ] Implementation pending'}\n\n## 🚦 Status\n**Current:** Pending approval\\n**Created:** ${intent.timestamp}\n\n---\n*Created by Thalamus AI*`;\n\nfs.writeFileSync(filePath, content);\n\nreturn {\n  json: {\n    obsidianPath: filePath,\n    intent\n  }\n};"
+      },
+      "name": "Create Obsidian Note",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [650, 200]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://leantime:80/api/jsonrpc",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "json",
+        "body": {
+          "jsonrpc": "2.0",
+          "method": "leantime.rpc.Tickets.addTicket",
+          "params": {
+            "values": {
+              "headline": "={{ $('Parse Intent').item.json.intent.projectName }}/{{ $('Parse Intent').item.json.intent.name }}",
+              "description": "Intent ID: {{ $('Parse Intent').item.json.intent.intent_id }}\\n\\n{{ $('Parse Intent').item.json.intent.description }}",
+              "projectId": 1,
+              "type": "story",
+              "tags": "ai-generated,thalamus"
+            }
+          },
+          "id": 1
+        }
+      },
+      "name": "Create Leantime Ticket",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [650, 400],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "leantime-api-key",
+          "name": "Leantime API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://orchestrator:7654/api/intents",
+        "sendBody": true,
+        "contentType": "json",
+        "body": "={{ JSON.stringify($('Parse Intent').item.json.intent) }}"
+      },
+      "name": "Register with Orchestrator",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "options": {},
+        "respondWith": "json",
+        "responseBody": "={{ {\n  \"status\": \"success\",\n  \"intent_id\": $('Parse Intent').item.json.intent.intent_id,\n  \"project\": $('Parse Intent').item.json.intent.projectName,\n  \"message\": \"Intent created and synced to all systems\"\n} }}"
+      },
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1050, 300]
+    }
+  ],
+  "connections": {
+    "Intent Webhook": {
+      "main": [[{"node": "Parse Intent", "type": "main", "index": 0}]]
+    },
+    "Parse Intent": {
+      "main": [
+        [
+          {"node": "Create Obsidian Note", "type": "main", "index": 0},
+          {"node": "Create Leantime Ticket", "type": "main", "index": 0},
+          {"node": "Register with Orchestrator", "type": "main", "index": 0}
+        ]
+      ]
+    },
+    "Create Obsidian Note": {
+      "main": [[{"node": "Respond to Webhook", "type": "main", "index": 0}]]
+    },
+    "Create Leantime Ticket": {
+      "main": [[{"node": "Respond to Webhook", "type": "main", "index": 0}]]
+    },
+    "Register with Orchestrator": {
+      "main": [[{"node": "Respond to Webhook", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": ["sophia", "intent", "obsidian", "leantime"]
+}

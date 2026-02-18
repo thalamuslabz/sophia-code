@@ -1,0 +1,31 @@
+# Thalamus AI - Caddy Reverse Proxy Configuration
+# Placeholder for production deployment
+
+{
+    auto_https off
+}
+
+:80 {
+    # Open WebUI
+    handle_path /chat/* {
+        reverse_proxy openwebui:8080
+    }
+    
+    # n8n
+    handle_path /workflows/* {
+        reverse_proxy n8n:5678
+    }
+    
+    # Sophia Dashboard
+    handle_path /dashboard/* {
+        reverse_proxy sophia-dashboard:9473
+    }
+    
+    # Orchestrator API
+    handle_path /api/* {
+        reverse_proxy orchestrator:7654
+    }
+    
+    # Default to Open WebUI
+    reverse_proxy openwebui:8080
+}

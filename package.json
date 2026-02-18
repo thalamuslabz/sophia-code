@@ -1,29 +1,90 @@
 {
-  "name": "sophia-code",
+  "name": "thalamus-ai",
   "version": "1.0.0",
+  "description": "The vibe coder's complete development environment",
   "private": true,
   "type": "module",
   "workspaces": [
     "packages/*"
   ],
+  "dependencies": {
+    "@thalamus/obsidian-sync": "1.0.0",
+    "@thalamus/leantime-integration": "1.0.0",
+    "@thalamus/qdrant-sync": "1.0.0"
+  },
   "scripts": {
+    "setup": "./install.sh",
+    "setup:dev": "./install.sh --dev",
+    "setup:minimal": "./install.sh --minimal",
     "build": "npm run build --workspaces",
+    "build:shared": "cd packages/shared && npm run build",
+    "build:cli": "cd packages/cli && npm run build",
+    "build:dashboard": "cd packages/dashboard && npm run build",
+    "build:orchestrator": "cd packages/orchestrator && npm run build",
+    "build:all": "npm run build:shared && npm run build:cli && npm run build:dashboard && npm run build:orchestrator",
+    "dev": "concurrently \"npm:dev:cli\" \"npm:dev:orchestrator\" \"npm:dev:dashboard\"",
+    "dev:cli": "cd packages/cli && npm run dev",
+    "dev:dashboard": "cd packages/dashboard && npm run dev",
+    "dev:orchestrator": "cd packages/orchestrator && npm run dev",
     "test": "npm run test --workspaces --if-present",
+    "test:cli": "cd packages/cli && npm test",
+    "test:dashboard": "cd packages/dashboard && npm test",
+    "test:orchestrator": "cd packages/orchestrator && npm test",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:headed": "playwright test --headed",
+    "test:integration": "vitest run --config __e2e__/vitest.config.ts",
     "test:coverage": "vitest run --coverage",
     "test:all": "npm run test && npm run test:e2e",
-    "lint": "npm run lint --workspaces --if-present"
+    "lint": "npm run lint --workspaces --if-present",
+    "lint:fix": "npm run lint --workspaces --if-present -- --fix",
+    "format": "prettier --write \"packages/**/*.{ts,tsx,js,json,md}\"",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f",
+    "docker:build": "docker compose build",
+    "docker:clean": "docker compose down -v",
+    "clean": "rm -rf packages/*/dist && rm -rf packages/*/node_modules/.cache && rm -rf .sophia",
+    "reset": "npm run clean && rm -rf node_modules && rm -rf packages/*/node_modules && npm ci && npm run build",
+    "sophia": "./packages/cli/dist/index.js",
+    "version:patch": "npm version patch",
+    "version:minor": "npm version minor",
+    "version:major": "npm version major"
   },
   "engines": {
     "node": ">=18.0.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.58.2",
+    "@types/node-notifier": "^8.0.5",
     "@vitest/coverage-v8": "^2.1.0",
+    "chokidar": "^5.0.0",
+    "concurrently": "^8.2.0",
+    "node-notifier": "^10.0.1",
+    "prettier": "^3.2.0",
     "typescript": "~5.6.0",
     "vitest": "^2.1.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thalamus-ai/thalamus-ai.git"
+  },
+  "keywords": [
+    "ai",
+    "development",
+    "vibe-coding",
+    "agent",
+    "governance",
+    "automation",
+    "cli",
+    "typescript"
+  ],
+  "author": "Thalamus AI",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/thalamus-ai/thalamus-ai/issues"
+  },
+  "homepage": "https://github.com/thalamus-ai/thalamus-ai#readme"
 }

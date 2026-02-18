@@ -1,0 +1,72 @@
+{
+  "name": "Evidence to Obsidian",
+  "nodes": [
+    {
+      "parameters": {
+        "event": "add",
+        "path": "{{$env.HOME}}/.auto-claude/evidence"
+      },
+      "name": "Watch Evidence",
+      "type": "n8n-nodes-base.localFileTrigger",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "fileSelector": "={{ $json.path }}"
+      },
+      "name": "Read Evidence",
+      "type": "n8n-nodes-base.readBinaryFiles",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse evidence JSON\nconst binaryData = $input.first().binary.data;\nconst jsonString = Buffer.from(binaryData.data, 'base64').toString();\nconst evidence = JSON.parse(jsonString);\n\n// Generate Obsidian markdown\nconst date = new Date(evidence.timestamp).toLocaleString();\nconst statusEmoji = {\n  success: '✅',\n  failure: '❌',\n  partial: '⚠️'\n}[evidence.status] || '❓';\n\nconst markdown = `# ${statusEmoji} Build: ${evidence.project}\n\n## Metadata\n- **Intent ID**: \`${evidence.intent_id}\`\n- **Status**: ${statusEmoji} ${evidence.status}\n- **Date**: ${date}\n\n## Artifacts\n${evidence.artifacts.map(a => `- ${a.path} (${a.type})`).join('\\n')}\n\n---\n*Synced by Thalamus AI*`;\n\nreturn {\n  json: {\n    filename: `${evidence.intent_id}.md`,\n    project: evidence.project,\n    content: markdown\n  }\n};"
+      },
+      "name": "Generate Note",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "fileName": "={{ $env.HOME }}/Documents/Obsidian Vault/06-PROJECTS/{{ $json.project }}/builds/{{ $json.filename }}",
+        "dataPropertyNameType": "auto",
+        "dataPropertyName": "content"
+      },
+      "name": "Write to Vault",
+      "type": "n8n-nodes-base.writeBinaryFile",
+      "typeVersion": 1,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "title": "Thalamus: Build Complete",
+        "message": "=Synced {{ $json.project }} build to Obsidian"
+      },
+      "name": "Notify",
+      "type": "n8n-nodes-base.desktopNotification",
+      "typeVersion": 1,
+      "position": [1050, 300]
+    }
+  ],
+  "connections": {
+    "Watch Evidence": {
+      "main": [[{"node": "Read Evidence", "type": "main", "index": 0}]]
+    },
+    "Read Evidence": {
+      "main": [[{"node": "Generate Note", "type": "main", "index": 0}]]
+    },
+    "Generate Note": {
+      "main": [[{"node": "Write to Vault", "type": "main", "index": 0}]]
+    },
+    "Write to Vault": {
+      "main": [[{"node": "Notify", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": ["thalamus", "obsidian", "evidence"]
+}

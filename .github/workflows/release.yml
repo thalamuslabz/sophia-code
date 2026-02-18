@@ -1,0 +1,71 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+          cache: "npm"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build packages
+        run: npm run build
+
+      - name: Run tests
+        run: npm test
+
+      - name: Create release archive
+        run: |
+          mkdir -p dist
+          tar -czf dist/thalamus-ai-${GITHUB_REF#refs/tags/}.tar.gz \
+            --exclude='node_modules' \
+            --exclude='.git' \
+            --exclude='dist' \
+            --exclude='.sophia' \
+            --exclude='*.log' \
+            .
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist/*.tar.gz
+          generate_release_notes: true
+          prerelease: ${{ contains(github.ref, 'beta') || contains(github.ref, 'alpha') }}
+
+      - name: Build and push Docker images
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+          
+          VERSION=${GITHUB_REF#refs/tags/v}
+          
+          # Build images
+          docker compose -f docker-compose.yml build
+          
+          # Tag and push
+          docker tag thalamus-orchestrator ghcr.io/${{ github.repository }}/orchestrator:${VERSION}
+          docker tag thalamus-orchestrator ghcr.io/${{ github.repository }}/orchestrator:latest
+          docker push ghcr.io/${{ github.repository }}/orchestrator:${VERSION}
+          docker push ghcr.io/${{ github.repository }}/orchestrator:latest
+          
+          docker tag thalamus-dashboard ghcr.io/${{ github.repository }}/dashboard:${VERSION}
+          docker tag thalamus-dashboard ghcr.io/${{ github.repository }}/dashboard:latest
+          docker push ghcr.io/${{ github.repository }}/dashboard:${VERSION}
+          docker push ghcr.io/${{ github.repository }}/dashboard:latest

@@ -1,0 +1,234 @@
+# Thalamus AI - Full Stack Development Environment
+# One-command setup for vibe coders
+# Usage: docker-compose up -d
+
+version: '3.8'
+
+services:
+  # ==========================================
+  # KNOWLEDGE LAYER (Vector Search)
+  # ==========================================
+  
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: thalamus-qdrant
+    restart: unless-stopped
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant-data:/qdrant/storage
+    environment:
+      - QDRANT__SERVICE__HTTP_PORT=6333
+      - QDRANT__SERVICE__GRPC_PORT=6334
+    networks:
+      - thalamus-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6333/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ==========================================
+  # PROJECT MANAGEMENT
+  # ==========================================
+  
+  leantime:
+    image: leantime/leantime:latest
+    container_name: thalamus-leantime
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+    environment:
+      - LEAN_DB_HOST=leantime-db
+      - LEAN_DB_USER=leantime
+      - LEAN_DB_PASSWORD=leantime
+      - LEAN_DB_DATABASE=leantime
+      - LEAN_SITENAME=Thalamus Projects
+    depends_on:
+      - leantime-db
+    networks:
+      - thalamus-network
+
+  leantime-db:
+    image: mysql:8.0
+    container_name: thalamus-leantime-db
+    restart: unless-stopped
+    volumes:
+      - leantime-db-data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=leantime
+      - MYSQL_DATABASE=leantime
+      - MYSQL_USER=leantime
+      - MYSQL_PASSWORD=leantime
+    networks:
+      - thalamus-network
+
+  # ==========================================
+  # PRODUCTIVITY HUB (Core Infrastructure)
+  # ==========================================
+  
+  # Open WebUI - AI Chat Interface
+  openwebui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: thalamus-openwebui
+    restart: unless-stopped
+    ports:
+      - "3115:8080"
+    environment:
+      - WEBUI_AUTH=false
+      - WEBUI_NAME=Thalamus AI
+      - WEBUI_URL=http://localhost:3115
+      - ENABLE_SIGNUP=false
+      - DEFAULT_MODELS=claude-3-5-sonnet-20241022
+      - ENABLE_COMMUNITY_SHARING=false
+      - WEBUI_BUILD_VERSION=v0.0.1
+    volumes:
+      - openwebui-data:/app/backend/data
+      - ./apps/openwebui-functions:/app/backend/functions/custom:ro
+    networks:
+      - thalamus-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # n8n - Workflow Automation
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: thalamus-n8n
+    restart: unless-stopped
+    ports:
+      - "3118:5678"
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=false
+      - N8N_HOST=localhost
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - NODE_ENV=production
+      - WEBHOOK_URL=http://localhost:3118/
+      - GENERIC_TIMEZONE=America/New_York
+    volumes:
+      - n8n-data:/home/node/.n8n
+      - ./apps/n8n-workflows:/workflows:ro
+    networks:
+      - thalamus-network
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:5678/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # SQLite Web - Database Browser (optional, for debugging)
+  sqlite-web:
+    image: coleifer/sqlite-web:latest
+    container_name: thalamus-sqlite-web
+    restart: unless-stopped
+    ports:
+      - "3119:8080"
+    volumes:
+      - sophia-data:/data:ro
+    environment:
+      - SQLITE_DATABASE=/data/sophia.db
+    networks:
+      - thalamus-network
+    profiles:
+      - debug
+
+  # ==========================================
+  # ORCHESTRATOR (Build Management)
+  # ==========================================
+  
+  orchestrator:
+    build:
+      context: ./packages/orchestrator
+      dockerfile: Dockerfile
+    container_name: thalamus-orchestrator
+    restart: unless-stopped
+    ports:
+      - "7654:7654"
+    environment:
+      - NODE_ENV=production
+      - PORT=7654
+      - DATABASE_URL=/data/thalamus.db
+      - N8N_WEBHOOK_URL=http://n8n:5678/webhook
+      - SOPHIA_API_URL=http://host.docker.internal:9473/api
+    volumes:
+      - orchestrator-data:/data
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ${HOME}/code:/code:rw
+    networks:
+      - thalamus-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:7654/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ==========================================
+  # SOPHIA DASHBOARD (Governance UI)
+  # ==========================================
+  
+  sophia-dashboard:
+    build:
+      context: ./packages/dashboard
+      dockerfile: Dockerfile
+    container_name: thalamus-dashboard
+    restart: unless-stopped
+    ports:
+      - "9473:9473"
+    environment:
+      - NODE_ENV=production
+      - SOPHIA_PROJECT_ROOT=/workspace
+    volumes:
+      - ${PWD}:/workspace:rw
+      - sophia-data:/workspace/.sophia
+    networks:
+      - thalamus-network
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:9473"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ==========================================
+  # REVERSE PROXY (Unified Access)
+  # ==========================================
+  
+  caddy:
+    image: caddy:2-alpine
+    container_name: thalamus-caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./config/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    networks:
+      - thalamus-network
+    depends_on:
+      - openwebui
+      - n8n
+      - orchestrator
+      - sophia-dashboard
+    profiles:
+      - production
+
+volumes:
+  openwebui-data:
+  n8n-data:
+  orchestrator-data:
+  sophia-data:
+  caddy-data:
+  caddy-config:
+  qdrant-data:
+  leantime-db-data:
+
+networks:
+  thalamus-network:
+    driver: bridge

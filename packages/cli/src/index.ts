@@ -22,6 +22,7 @@ import { cleanCommand } from "./commands/clean.js";
 import { dashboardCommand } from "./commands/dashboard.js";
 import { watchCommand } from "./commands/watch.js";
 import { updateCommand } from "./commands/update.js";
+import { autoClaudeCommand } from "./commands/auto-claude.js";
 import { enforceVersion } from "./core/version-manager.js";
 
 const program = new Command();
@@ -62,5 +63,6 @@ program.addCommand(cleanCommand);
 program.addCommand(dashboardCommand);
 program.addCommand(watchCommand);
 program.addCommand(updateCommand);
+program.addCommand(autoClaudeCommand);
 
 program.parse();
