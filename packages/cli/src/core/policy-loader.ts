@@ -27,7 +27,12 @@ export function loadPolicies(policiesDir: string): Policy[] {
         description: parsed.policy.description,
         rules: parsed.rules.map((r) => ({
           ...r,
+          severity: r.severity as "green" | "yellow" | "red",
           auto_fixable: r.auto_fixable ?? false,
+          detection: {
+            ...r.detection,
+            type: r.detection.type as "pattern" | "git-hook" | "heuristic" | "action" | undefined,
+          },
         })),
       });
     } catch (err) {

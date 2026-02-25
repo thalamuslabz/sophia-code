@@ -1,0 +1,130 @@
+products:
+- name: SYNAPTICA
+  production_path: /Users/sesloan/repos/thalamus-ai/SYNAPTICA/docs/master-production
+  development_path: /Users/sesloan/repos/thalamus-ai/SYNAPTICA/docs/master-development
+  obsidian_prod_path: /Users/sesloan/Documents/Obsidian Vault/Thalamus/02-PRODUCTS/SYNAPTICA/master
+  obsidian_dev_path: /Users/sesloan/Documents/Obsidian Vault/Thalamus/06-PROJECTS/SYNAPTICA/master
+  description: AI Product Context Manager - system architecture, API docs, and operational
+    guides
+  file_patterns:
+  - '**/*.md'
+  - '**/*.mdx'
+  exclude_patterns:
+  - .git
+  - node_modules
+  - __pycache__
+  - .obsidian
+  - '*.tmp'
+- name: ExecutionIQ
+  production_path: /Users/sesloan/repos/thalamus-ai/ExecutionIQ/docs/master-production
+  development_path: /Users/sesloan/repos/thalamus-ai/ExecutionIQ/docs/master-development
+  obsidian_prod_path: /Users/sesloan/Documents/Obsidian Vault/Thalamus/02-PRODUCTS/ExecutionIQ/master
+  obsidian_dev_path: /Users/sesloan/Documents/Obsidian Vault/Thalamus/06-PROJECTS/ExecutionIQ/master
+  description: Execution intelligence platform - strategy, operations, and go-to-market
+  file_patterns:
+  - '**/*.md'
+  - '**/*.mdx'
+  exclude_patterns:
+  - .git
+  - node_modules
+  - __pycache__
+  - .obsidian
+  - '*.tmp'
+- name: Thalamus-Company
+  production_path: /Users/sesloan/Documents/companies/Thalamus/docs/master
+  development_path: /Users/sesloan/Documents/companies/Thalamus/docs/master
+  obsidian_prod_path: /Users/sesloan/Documents/Obsidian Vault/thalamus-ai/02-PRODUCTS/Company/master
+  obsidian_dev_path: /Users/sesloan/Documents/Obsidian Vault/thalamus-ai/02-PRODUCTS/Company/master
+  description: Thalamus AI company documentation - corporate standards, strategy,
+    and operations
+  single_kb: true
+  file_patterns:
+  - '**/*.md'
+  - '**/*.mdx'
+  - '**/*.txt'
+  exclude_patterns:
+  - .git
+  - node_modules
+  - __pycache__
+  - .obsidian
+  - '*.tmp'
+- name: CortexDigital-Company
+  production_path: /Users/sesloan/Documents/companies/Cortex Digital/docs/master
+  development_path: /Users/sesloan/Documents/companies/Cortex Digital/docs/master
+  obsidian_prod_path: /Users/sesloan/Documents/Obsidian Vault/cortex-digital/02-PRODUCTS/Company/master
+  obsidian_dev_path: /Users/sesloan/Documents/Obsidian Vault/cortex-digital/02-PRODUCTS/Company/master
+  description: Cortex Digital company documentation
+  single_kb: true
+  file_patterns:
+  - '**/*.md'
+  - '**/*.mdx'
+  - '**/*.txt'
+  exclude_patterns:
+  - .git
+  - node_modules
+  - __pycache__
+  - .obsidian
+  - '*.tmp'
+- name: HypeLocal-Company
+  production_path: /Users/sesloan/Documents/companies/Hype Local/docs/master
+  development_path: /Users/sesloan/Documents/companies/Hype Local/docs/master
+  obsidian_prod_path: /Users/sesloan/Documents/Obsidian Vault/hype-local/02-PRODUCTS/Company/master
+  obsidian_dev_path: /Users/sesloan/Documents/Obsidian Vault/hype-local/02-PRODUCTS/Company/master
+  description: Hype Local company documentation
+  single_kb: true
+  file_patterns:
+  - '**/*.md'
+  - '**/*.mdx'
+  - '**/*.txt'
+  exclude_patterns:
+  - .git
+  - node_modules
+  - __pycache__
+  - .obsidian
+  - '*.tmp'
+- name: sophiaclaw
+  production_path: /Users/sesloan/repos/thalamus-labz/sophiaclaw/docs/master-production
+  development_path: /Users/sesloan/repos/thalamus-labz/sophiaclaw/docs/master-development
+  obsidian_prod_path: /Users/sesloan/Documents/Obsidian Vault/thalamus-labz/02-PRODUCTS/sophiaclaw/master
+  obsidian_dev_path: /Users/sesloan/Documents/Obsidian Vault/thalamus-labz/06-PROJECTS/sophiaclaw/master
+  description: sophiaclaw documentation
+  file_patterns:
+  - '**/*.md'
+  - '**/*.mdx'
+  exclude_patterns:
+  - .git
+  - node_modules
+  - __pycache__
+  - .obsidian
+  - '*.tmp'
+- name: sophia-ops
+  production_path: /Users/sesloan/repos/thalamus-labz/sophia-ops/docs/master-production
+  development_path: /Users/sesloan/repos/thalamus-labz/sophia-ops/docs/master-development
+  obsidian_prod_path: /Users/sesloan/Documents/Obsidian Vault/thalamus-labz/02-PRODUCTS/sophia-ops/master
+  obsidian_dev_path: /Users/sesloan/Documents/Obsidian Vault/thalamus-labz/06-PROJECTS/sophia-ops/master
+  description: sophia-ops documentation
+  file_patterns:
+  - '**/*.md'
+  - '**/*.mdx'
+  exclude_patterns:
+  - .git
+  - node_modules
+  - __pycache__
+  - .obsidian
+  - '*.tmp'
+- name: ThalamusLabz-Company
+  production_path: /Users/sesloan/Documents/companies/Thalamus Labz/docs/master
+  development_path: /Users/sesloan/Documents/companies/Thalamus Labz/docs/master
+  obsidian_prod_path: /Users/sesloan/Documents/Obsidian Vault/thalamus-labz/02-PRODUCTS/Company/master
+  obsidian_dev_path: /Users/sesloan/Documents/Obsidian Vault/thalamus-labz/02-PRODUCTS/Company/master
+  description: Thalamus Labz company documentation
+  file_patterns:
+  - '**/*.md'
+  - '**/*.mdx'
+  - '**/*.txt'
+  exclude_patterns:
+  - .git
+  - node_modules
+  - __pycache__
+  - .obsidian
+  - '*.tmp'

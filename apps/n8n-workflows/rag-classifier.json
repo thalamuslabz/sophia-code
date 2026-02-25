@@ -1,0 +1,117 @@
+{
+  "name": "RAG Query Classifier",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "rag-classify",
+        "responseMode": "responseNode"
+      },
+      "name": "Classification Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "rag-classify"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract query from webhook\nconst query = $json.body?.query || $json.query;\n\nif (!query) {\n  return [{\n    json: {\n      error: 'No query provided',\n      received: $json\n    }\n  }];\n}\n\nreturn [{\n  json: { query }\n}];"
+      },
+      "name": "Extract Query",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://intelligent-rag:8765/classify",
+        "sendBody": true,
+        "contentType": "json",
+        "body": "={{ JSON.stringify({ query: $json.query }) }}"
+      },
+      "name": "Call Local Classifier",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [650, 200]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://openrouter.ai/api/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "json",
+        "body": "={{ {\n  \"model\": \"google/gemini-flash-1.5\",\n  \"messages\": [{\n    \"role\": \"user\",\n    \"content\": `You are a query classification expert. Classify this query into Tier 1 (specific lookup), Tier 2 (comprehensive analysis), or Tier 3 (creative synthesis).\\n\\nQuery: \"${$json.query}\"\\n\\nRespond with JSON: {\\\"tier\\\": 1|2|3, \\\"confidence\\\": 0.0-1.0, \\\"reasoning\\\": \\\"...\\\"}`\n  }],\n  \"temperature\": 0.1,\n  \"max_tokens\": 150,\n  \"response_format\": {\"type\": \"json_object\"}\n} }}"
+      },
+      "name": "LLM Classification",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [650, 400],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "openrouter-api-key",
+          "name": "OpenRouter API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse LLM response\nconst llmResponse = $json;\nconst content = llmResponse.choices?.[0]?.message?.content;\n\nif (!content) {\n  return [{ json: { error: 'Invalid LLM response' } }];\n}\n\ntry {\n  const result = JSON.parse(content);\n  return [{\n    json: {\n      tier: result.tier || 1,\n      confidence: result.confidence || 0.8,\n      reasoning: result.reasoning || 'Classified by LLM',\n      source: 'llm'\n    }\n  }];\n} catch (e) {\n  return [{ json: { error: 'Failed to parse LLM response', raw: content } }];\n}"
+      },
+      "name": "Parse LLM Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [850, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Merge results - prefer LLM if available and confident\nconst localResult = $input.all()[0]?.json;\nconst llmResult = $input.all()[1]?.json;\n\nconst query = $('Extract Query').item.json.query;\n\n// Default to local result\nlet finalResult = {\n  ...localResult.classification,\n  query,\n  source: 'keyword'\n};\n\n// Use LLM if it's confident\nif (llmResult && llmResult.confidence > 0.75) {\n  finalResult = {\n    ...llmResult,\n    query\n  };\n}\n\n// Map tier to RAG settings\nconst tierConfig = {\n  1: { rag_full_context: false, top_k: 15, strategy: 'standard' },\n  2: { rag_full_context: false, top_k: 50, strategy: 'comprehensive' },\n  3: { rag_full_context: true, top_k: 100, strategy: 'full_context' }\n};\n\nconst config = tierConfig[finalResult.tier || finalResult.recommended_tier || 1];\n\nreturn [{\n  json: {\n    query,\n    classification: {\n      tier: finalResult.tier || finalResult.recommended_tier || 1,\n      type: finalResult.type || 'specific_lookup',\n      confidence: finalResult.confidence,\n      reasoning: finalResult.reasoning,\n      ...config\n    },\n    source: finalResult.source\n  }\n}];"
+      },
+      "name": "Merge Results",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1050, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}"
+      },
+      "name": "Respond",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1250, 300]
+    }
+  ],
+  "connections": {
+    "Classification Webhook": {
+      "main": [[{"node": "Extract Query", "type": "main", "index": 0}]]
+    },
+    "Extract Query": {
+      "main": [
+        [
+          {"node": "Call Local Classifier", "type": "main", "index": 0},
+          {"node": "LLM Classification", "type": "main", "index": 0}
+        ]
+      ]
+    },
+    "Call Local Classifier": {
+      "main": [[{"node": "Merge Results", "type": "main", "index": 0}]]
+    },
+    "LLM Classification": {
+      "main": [[{"node": "Parse LLM Result", "type": "main", "index": 0}]]
+    },
+    "Parse LLM Result": {
+      "main": [[{"node": "Merge Results", "type": "main", "index": 0}]]
+    },
+    "Merge Results": {
+      "main": [[{"node": "Respond", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": ["rag", "classification", "openrouter"]
+}

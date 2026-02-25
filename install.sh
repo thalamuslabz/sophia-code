@@ -177,6 +177,12 @@ setup_docker() {
     log_info "Installing n8n workflows..."
     cp -r packages/orchestrator/n8n/workflows/* apps/n8n-workflows/ 2>/dev/null || true
     
+    # Decompress database files if needed
+    if [ -f "data/openwebui/webui.db.gz" ] && [ ! -f "data/openwebui/webui.db" ]; then
+        log_info "Extracting embedded Open WebUI database..."
+        gzip -d -c data/openwebui/webui.db.gz > data/openwebui/webui.db
+    fi
+
     # Start infrastructure
     log_info "Starting containers..."
     docker compose up -d openwebui n8n

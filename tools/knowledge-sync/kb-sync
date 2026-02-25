@@ -1,0 +1,156 @@
+#!/bin/bash
+#
+# Knowledge Base Sync Wrapper Script
+# Easy-to-use wrapper for knowledge_sync.py with auto-discovery
+#
+# Usage:
+#   kb-sync list                  # List all knowledge bases
+#   kb-sync discover              # Show what would be synced (dry run)
+#   kb-sync sync                  # Sync all discovered repos and companies
+#   kb-sync sync -p SYNAPTICA     # Sync only SYNAPTICA
+#   kb-sync sync -p SYNAPTICA -e production  # Sync only production
+#   kb-sync watch                 # Watch for changes (auto-sync every 5 min)
+#   kb-sync init                  # Create sample config
+
+set -e
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CONFIG_FILE="${KB_SYNC_CONFIG:-}"  # Optional config file
+API_URL="${OPEN_WEBUI_URL:-http://localhost:3115}"
+API_KEY="${OPEN_WEBUI_API_KEY}"
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# Check for API key
+if [ -z "$API_KEY" ]; then
+    echo -e "${RED}❌ Error: OPEN_WEBUI_API_KEY not set${NC}"
+    echo ""
+    echo "Get your API key from: Open WebUI → Settings → Account → API Key"
+    echo ""
+    echo "Then set it with:"
+    echo "  export OPEN_WEBUI_API_KEY='your-api-key-here'"
+    echo ""
+    echo "Or pass it directly:"
+    echo "  OPEN_WEBUI_API_KEY='your-key' kb-sync sync"
+    exit 1
+fi
+
+# Build config argument (optional)
+CONFIG_ARG=""
+if [ -n "$CONFIG_FILE" ]; then
+    CONFIG_ARG="--config $CONFIG_FILE"
+fi
+
+# Show help if no arguments
+if [ $# -eq 0 ]; then
+    echo -e "${BLUE}📚 Knowledge Base Sync Tool (Auto-Discovery Enabled)${NC}"
+    echo ""
+    echo "Scans for documentation in:"
+    echo "  • ~/repos/{org}/*/docs/master-production/ → {Repo} - Production"
+    echo "  • ~/repos/{org}/*/docs/master-development/ → {Repo} - Development"
+    echo "  • ~/Documents/companies/*/docs/master/ → {Company}"
+    echo ""
+    echo "Usage: kb-sync <command> [options]"
+    echo ""
+    echo "Commands:"
+    echo "  discover          Show what would be synced (dry run)"
+    echo "  list              List all knowledge bases in Open WebUI"
+    echo "  sync              Sync all discovered repos and companies"
+    echo "  sync -p <name>    Sync specific product only"
+    echo "  sync -e <env>     Sync specific environment (production|development|both)"
+    echo "  watch             Watch for changes and auto-sync (5 min interval)"
+    echo "  cleanup           Remove duplicate knowledge bases (dry run)"
+    echo "  cleanup --execute Actually delete duplicates"
+    echo "  init              Create sample configuration file"
+    echo ""
+    echo "Options:"
+    echo "  --no-discover     Disable auto-discovery (use explicit config only)"
+    echo ""
+    echo "Environment Variables:"
+    echo "  OPEN_WEBUI_API_KEY    Your Open WebUI API key (required)"
+    echo "  OPEN_WEBUI_URL        Open WebUI URL (default: http://localhost:3115)"
+    echo "  KB_SYNC_CONFIG        Path to optional config file"
+    echo ""
+    echo "Examples:"
+    echo "  kb-sync discover           # Preview what would be synced"
+    echo "  kb-sync sync               # Sync everything"
+    echo "  kb-sync sync -p SYNAPTICA  # Sync only SYNAPTICA"
+    echo "  kb-sync watch              # Auto-sync every 5 minutes"
+    exit 0
+fi
+
+COMMAND=$1
+shift
+
+# Handle --no-discover flag
+NO_DISCOVER_ARG=""
+if [ "$1" = "--no-discover" ]; then
+    NO_DISCOVER_ARG="--no-discover"
+    shift
+fi
+
+# Run the Python script
+case $COMMAND in
+    discover)
+        echo -e "${BLUE}🔍 Discovering repositories and companies...${NC}"
+        python3 "$SCRIPT_DIR/knowledge_sync.py" $CONFIG_ARG --api-url "$API_URL" --api-key "$API_KEY" discover
+        ;;
+    
+    list)
+        echo -e "${BLUE}📚 Listing knowledge bases...${NC}"
+        python3 "$SCRIPT_DIR/knowledge_sync.py" $CONFIG_ARG --api-url "$API_URL" --api-key "$API_KEY" $NO_DISCOVER_ARG list
+        ;;
+    
+    cleanup)
+        EXECUTE_FLAG=""
+        if [ "$1" = "--execute" ]; then
+            EXECUTE_FLAG="--execute"
+            echo -e "${RED}🗑️  Cleaning up duplicate knowledge bases (DELETING)...${NC}"
+        else
+            echo -e "${YELLOW}🧹 Checking for duplicate knowledge bases (dry run)...${NC}"
+            echo -e "${YELLOW}   Add --execute to actually delete${NC}"
+        fi
+        python3 "$SCRIPT_DIR/knowledge_sync.py" $CONFIG_ARG --api-url "$API_URL" --api-key "$API_KEY" $NO_DISCOVER_ARG cleanup $EXECUTE_FLAG
+        ;;
+    
+    sync)
+        echo -e "${GREEN}🔄 Syncing knowledge bases...${NC}"
+        python3 "$SCRIPT_DIR/knowledge_sync.py" $CONFIG_ARG --api-url "$API_URL" --api-key "$API_KEY" $NO_DISCOVER_ARG sync "$@"
+        ;;
+    
+    watch)
+        INTERVAL=300
+        # Parse interval if provided
+        while [[ $# -gt 0 ]]; do
+            case $1 in
+                -i|--interval)
+                    INTERVAL="$2"
+                    shift 2
+                    ;;
+                *)
+                    shift
+                    ;;
+            esac
+        done
+        echo -e "${YELLOW}👁️  Watching for changes (interval: ${INTERVAL}s)...${NC}"
+        echo -e "${YELLOW}   Press Ctrl+C to stop${NC}"
+        python3 "$SCRIPT_DIR/knowledge_sync.py" $CONFIG_ARG --api-url "$API_URL" --api-key "$API_KEY" $NO_DISCOVER_ARG watch --interval "$INTERVAL"
+        ;;
+    
+    init)
+        OUTPUT="${1:-products.yaml}"
+        echo -e "${BLUE}📝 Creating sample configuration: $OUTPUT${NC}"
+        python3 "$SCRIPT_DIR/knowledge_sync.py" init --output "$OUTPUT"
+        ;;
+    
+    *)
+        echo -e "${RED}❌ Unknown command: $COMMAND${NC}"
+        echo "Run 'kb-sync' without arguments for help"
+        exit 1
+        ;;
+esac

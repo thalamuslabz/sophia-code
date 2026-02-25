@@ -1,0 +1,77 @@
+version: '3.8'
+
+# Permanent Intelligent RAG Service
+# 
+# This compose file sets up the Intelligent RAG system as a permanent
+# infrastructure service that runs alongside other Sophia components.
+#
+# Usage:
+#   docker-compose -f docker-compose.permanent.yml up -d
+#
+# The service will:
+# - Always be available (restart: unless-stopped)
+# - Be accessible from other containers on the sophia-network
+# - Use LLM classification if OPENROUTER_API_KEY is set
+# - Persist logs
+
+services:
+  intelligent-rag:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: intelligent-rag
+    hostname: intelligent-rag
+    ports:
+      - "${INTELLIGENT_RAG_PORT:-8765}:8765"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-}
+      - CLASSIFIER_MODEL=${CLASSIFIER_MODEL:-google/gemini-flash-1.5}
+      - USE_LLM_CLASSIFIER=${USE_LLM_CLASSIFIER:-true}
+      - LLM_CONFIDENCE_THRESHOLD=${LLM_CONFIDENCE_THRESHOLD:-0.7}
+    volumes:
+      - intelligent-rag-logs:/app/logs
+      - ./intelligent_rag.py:/app/intelligent_rag.py:ro
+      - ./intelligent_rag_llm.py:/app/intelligent_rag_llm.py:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8765/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - sophia-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.rag-classifier.rule=Host(`rag.localhost`)"
+      - "traefik.http.services.rag-classifier.loadbalancer.server.port=8765"
+
+  # Optional: n8n integration for classification
+  # This runs the n8n workflow as a microservice
+  n8n-rag-bridge:
+    image: n8nio/n8n:latest
+    container_name: n8n-rag-bridge
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=false
+      - WEBHOOK_URL=http://localhost:5678/
+    volumes:
+      - n8n-rag-data:/home/node/.n8n
+      - ../apps/n8n-workflows:/workflows:ro
+    ports:
+      - "5679:5678"
+    networks:
+      - sophia-network
+    profiles:
+      - n8n  # Only start when explicitly requested
+
+volumes:
+  intelligent-rag-logs:
+    driver: local
+  n8n-rag-data:
+    driver: local
+
+networks:
+  sophia-network:
+    external: true
+    name: sophia-network

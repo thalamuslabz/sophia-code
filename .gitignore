@@ -1,5 +1,24 @@
 # Dependencies
 node_modules/
+
+# Ignored extensions
+.mdx
+.mjs
+.cjs
+
+# Ignore Docker volume mounts and persistent databases
+/data/backups/
+/data/qdrant/
+/data/openwebui/cache/
+/data/openwebui/uploads/
+/data/openwebui/vector_db/
+/data/openwebui/*.db
+/data/openwebui/*.db.corrupted
+/data/openwebui/*.db.failed
+/data/n8n/binaryData/
+/data/n8n/*.sqlite
+!/data/openwebui/webui.db.gz
+
 .pnp
 .pnp.js
 
@@ -17,6 +36,7 @@ out/
 # Logs
 logs/
 *.log
+**/backups/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -52,7 +72,7 @@ Thumbs.db
 .cache/
 
 # Data directories
-data/
+# data/
 evidence/
 work/
 test-work/

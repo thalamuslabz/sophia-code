@@ -1,0 +1,17 @@
+Leantime Full Backup
+====================
+Timestamp: 20260217-212548
+Date: Tue Feb 17 21:25:49 EST 2026
+Source: ops-stack/data/leantime_db/
+Backup Type: Physical (cold backup of MySQL data files)
+
+Contents:
+- leantime_mysql_data.tar.gz - MySQL database files
+- leantime_uploads.tar.gz - User uploads (if exists)
+- leantime_logs.tar.gz - Application logs (if exists)
+
+Restore Instructions:
+1. Stop the MySQL container if running
+2. Remove or backup existing ops-stack/data/leantime_db/
+3. Extract leantime_mysql_data.tar.gz to ops-stack/data/
+4. Restart the MySQL container

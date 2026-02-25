@@ -23,7 +23,7 @@ export function generateDefaultConfig(
   const now = new Date().toISOString();
   const enabledPolicies = GOVERNANCE_POLICY_SETS[governanceLevel] ?? GOVERNANCE_POLICY_SETS["community"]!;
 
-  return {
+  const config: SophiaConfig = {
     sophia: {
       version: SOPHIA_VERSION,
       initialized: now,
@@ -44,7 +44,7 @@ export function generateDefaultConfig(
       detected_at: now,
     },
     agents: {
-      detected: agents,
+      detected: agents as DetectedAgentConfig[],
     },
     user: {
       experience_level: DEFAULT_EXPERIENCE_LEVEL,
@@ -69,6 +69,7 @@ export function generateDefaultConfig(
       score_on_commit: false,
     },
   };
+  return config;
 }
 
 export function writeConfig(projectRoot: string, config: SophiaConfig): void {

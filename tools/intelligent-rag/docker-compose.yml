@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  intelligent-rag:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: intelligent-rag
+    ports:
+      - "${INTELLIGENT_RAG_PORT:-8765}:8765"
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8765/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - sophia-network
+
+networks:
+  sophia-network:
+    external: true
+    name: sophia-network

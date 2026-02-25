@@ -1,0 +1,17 @@
+#!/bin/bash
+#
+# Manual sync trigger for repo-to-obsidian sync
+#
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PYTHON="/usr/bin/env python3"
+
+echo "🔄 Running Repo-to-Obsidian Sync..."
+echo "   Log: ~/logs/repo-obsidian-sync.log"
+echo ""
+
+$PYTHON "$SCRIPT_DIR/repo_obsidian_sync.py" "$@"
+
+echo ""
+echo "✅ Sync complete"
+echo "   View logs: tail -f ~/logs/repo-obsidian-sync.log"

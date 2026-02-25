@@ -219,12 +219,12 @@ export const initCommand = new Command("init")
     // Obsidian integration
     const obsSpinner = ora("Setting up Obsidian integration...").start();
     try {
-      const vaultPath = process.env.OBSIDIAN_VAULT_PATH || 
-        path.join(process.env.HOME || "~", "Documents", "Obsidian Vault");
-      
+      const vaultPath = process.env['OBSIDIAN_VAULT_PATH'] ||
+        path.join(process.env['HOME'] || "~", "Documents", "Obsidian Vault");
+
       if (fs.existsSync(path.join(vaultPath, ".obsidian"))) {
         // Create evidence directory
-        const evidenceDir = path.join(process.env.HOME || "~", ".auto-claude", "evidence");
+        const evidenceDir = path.join(process.env['HOME'] || "~", ".auto-claude", "evidence");
         fs.mkdirSync(evidenceDir, { recursive: true });
         
         obsSpinner.succeed("Obsidian integration ready");
